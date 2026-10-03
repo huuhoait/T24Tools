@@ -2,6 +2,7 @@
 // standalone bridge opens ../?tool=ofs), so rename labels, never ids.
 export const NAV_TABS = [
   ['routine', 'Routine Creator'],
+  ['artefact', 'Artefact Generator'],
   ['ofs', 'OFS Message Generator'],
   ['log', 'T24 Log Analyzer'],
 ];

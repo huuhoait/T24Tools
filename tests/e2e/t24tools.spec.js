@@ -19,13 +19,14 @@ function collectPageErrors(page) {
 }
 
 test.describe('T24Tools shell', () => {
-  test('header has exactly the three T24 tools and no codebase features', async ({ page }) => {
+  test('header has exactly the four T24 tools and no codebase features', async ({ page }) => {
     const errors = collectPageErrors(page);
     await page.goto('./');
     await expect(page.locator('header')).toContainText('T24Tools');
     const nav = page.getByRole('navigation', { name: 'Tools' });
     await expect(nav.getByRole('button')).toHaveText([
       'Routine Creator',
+      'Artefact Generator',
       'OFS Message Generator',
       'T24 Log Analyzer',
     ]);

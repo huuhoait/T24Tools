@@ -111,3 +111,9 @@ export function render(template, values) {
   if (missing.length) throw new MissingInputs(missing);
   return out;
 }
+
+/** YYYY-MM-DD of the developer's local calendar day ({{TODAY}} in file headers). */
+export function localIsoDate(date = new Date()) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}

@@ -131,3 +131,11 @@ describe('resolve / render rules', () => {
     }
   });
 });
+
+describe('localIsoDate', () => {
+  it('uses the local calendar day, not UTC (01:00 on 3 Oct local is still 3 Oct)', async () => {
+    const { localIsoDate } = await import('./render');
+    expect(localIsoDate(new Date(2026, 9, 3, 1, 0))).toBe('2026-10-03');
+    expect(localIsoDate(new Date(2026, 0, 9, 23, 59))).toBe('2026-01-09');
+  });
+});

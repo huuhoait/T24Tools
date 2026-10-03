@@ -812,3 +812,65 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+/* Artefact Generator */
+.artefact-generator .artefact-step {
+  margin-bottom: 16px;
+}
+.artefact-step.done {
+  border-color: var(--border-strong);
+}
+.artefact-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.artefact-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  cursor: pointer;
+  max-width: 100%;
+}
+.artefact-choice.on {
+  border-color: var(--accent);
+  background: var(--tint-accent);
+}
+.artefact-choice.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.artefact-choice input {
+  margin: 0;
+}
+.artefact-badge {
+  color: var(--muted);
+  font-size: 12px;
+}
+.artefact-inputs label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.artefact-inputs select,
+.artefact-inputs input {
+  width: 100%;
+  min-width: 0;
+}
+.artefact-files {
+  margin-bottom: 0;
+  overflow-x: auto;
+}
+.artefact-output {
+  max-height: 520px;
+  overflow: auto;
+  white-space: pre;
+}
+.artefact-description {
+  margin-top: 10px;
+}

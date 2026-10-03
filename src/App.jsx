@@ -14,6 +14,10 @@ const RoutineCreator = named(
   () => import('./features/routineCreator/RoutineCreator'),
   'RoutineCreator',
 );
+const ArtefactGenerator = named(
+  () => import('./features/artefactGenerator/ArtefactGenerator'),
+  'ArtefactGenerator',
+);
 const OFSGenerator = named(() => import('./features/tools/EmbeddedTools'), 'OFSGenerator');
 const LogAnalyzer = named(() => import('./features/tools/EmbeddedTools'), 'LogAnalyzer');
 
@@ -83,13 +87,17 @@ function App() {
           )}
           {tab !== 'routine' && (
             <ErrorBoundary key={tab}>
+              {tab === 'artefact' && <ArtefactGenerator />}
               {tab === 'ofs' && <OFSGenerator />}
               {tab === 'log' && <LogAnalyzer onOpenTool={setTab} />}
             </ErrorBoundary>
           )}
         </Suspense>
       </main>
-      <footer>© {new Date().getFullYear()} T24Tools · Zain Kamali</footer>
+      <footer>
+        © {new Date().getFullYear()} T24Tools · Zain Kamali · Independent project, not affiliated
+        with or endorsed by Temenos. Temenos, T24 and Transact are trademarks of Temenos AG.
+      </footer>
       <Toaster />
     </>
   );
