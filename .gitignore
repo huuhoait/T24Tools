@@ -12,3 +12,6 @@ coverage/
 playwright-report/
 test-results/
 blob-report/
+
+# Field descriptions are verbatim Temenos JavaDoc text: never published
+docs/t24tools/**/descriptions.json

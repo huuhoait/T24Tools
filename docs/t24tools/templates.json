@@ -1,0 +1,2583 @@
+{
+ "schemaVersion": 1,
+ "languages": [
+  {
+   "id": "infobasic",
+   "label": "Infobasic (legacy)",
+   "types": [
+    {
+     "id": "vvr",
+     "label": "Validation routine (VVR)",
+     "proven": true,
+     "template": "infobasic/vvr"
+    },
+    {
+     "id": "vir",
+     "label": "Input routine (VIR)",
+     "proven": true,
+     "template": "infobasic/vir"
+    },
+    {
+     "id": "var",
+     "label": "Authorisation routine (VAR)",
+     "proven": true,
+     "template": "infobasic/var"
+    },
+    {
+     "id": "nofile",
+     "label": "NoFile enquiry",
+     "proven": true,
+     "template": "infobasic/nofile"
+    },
+    {
+     "id": "ofs-routine",
+     "label": "OFS routine (OFS.POST.MESSAGE)",
+     "proven": true,
+     "template": "infobasic/ofs-routine"
+    }
+   ]
+  },
+  {
+   "id": "jbc",
+   "label": "jBC (componentised)",
+   "types": [
+    {
+     "id": "validation",
+     "label": "Validation routine (VVR)",
+     "proven": true,
+     "template": "jbc/validation"
+    },
+    {
+     "id": "get-api",
+     "label": "GET method",
+     "proven": true,
+     "template": "jbc/get-api"
+    },
+    {
+     "id": "write-api",
+     "label": "WRITE method (OFS)",
+     "proven": true,
+     "template": "jbc/write-api"
+    },
+    {
+     "id": "nofile",
+     "label": "NoFile enquiry",
+     "proven": true,
+     "template": "jbc/nofile"
+    }
+   ]
+  },
+  {
+   "id": "java",
+   "label": "Java (L3 hooks)",
+   "types": [
+    {
+     "id": "record-lifecycle-check-id",
+     "label": "RecordLifecycle.checkId (ID routine)",
+     "proven": true,
+     "template": "java/record-lifecycle-check-id"
+    },
+    {
+     "id": "record-lifecycle-default",
+     "label": "RecordLifecycle.defaultFieldValues (check-record / auto-field)",
+     "proven": true,
+     "template": "java/record-lifecycle-default"
+    },
+    {
+     "id": "record-lifecycle-hot-field",
+     "label": "RecordLifecycle.defaultFieldValuesOnHotField (hot field)",
+     "proven": true,
+     "template": "java/record-lifecycle-hot-field"
+    },
+    {
+     "id": "record-lifecycle-validate",
+     "label": "RecordLifecycle.validateRecord",
+     "proven": true,
+     "template": "java/record-lifecycle-validate"
+    },
+    {
+     "id": "record-lifecycle-validate-field",
+     "label": "RecordLifecycle.validateField (deprecated in R25)",
+     "proven": true,
+     "template": "java/record-lifecycle-validate-field"
+    },
+    {
+     "id": "record-lifecycle-update",
+     "label": "RecordLifecycle.updateRecord (input / before-auth)",
+     "proven": true,
+     "template": "java/record-lifecycle-update"
+    },
+    {
+     "id": "record-lifecycle-post-update",
+     "label": "RecordLifecycle.postUpdateRequest (authorisation)",
+     "proven": true,
+     "template": "java/record-lifecycle-post-update"
+    },
+    {
+     "id": "record-lifecycle-override-auto-approve",
+     "label": "RecordLifecycle.isOverrideAutoApprove (override)",
+     "proven": true,
+     "template": "java/record-lifecycle-override-auto-approve"
+    },
+    {
+     "id": "service-lifecycle",
+     "label": "ServiceLifecycle (multi-thread service)",
+     "proven": true,
+     "template": "java/service-lifecycle"
+    },
+    {
+     "id": "enquiry-nofile",
+     "label": "Enquiry.setIds (NoFile enquiry)",
+     "proven": true,
+     "template": "java/enquiry-nofile"
+    },
+    {
+     "id": "enquiry-build",
+     "label": "Enquiry.setFilterCriteria (build routine)",
+     "proven": true,
+     "template": "java/enquiry-build"
+    },
+    {
+     "id": "enquiry-conversion",
+     "label": "Enquiry.setValue (conversion routine)",
+     "proven": true,
+     "template": "java/enquiry-conversion"
+    },
+    {
+     "id": "activity-lifecycle-validate",
+     "label": "AA ActivityLifecycle.validateRecord",
+     "proven": true,
+     "template": "java/activity-lifecycle-validate"
+    },
+    {
+     "id": "aa-calculation-charge",
+     "label": "AA Calculation.getChargeAmount",
+     "proven": true,
+     "template": "java/aa-calculation-charge"
+    },
+    {
+     "id": "payment-lifecycle-validate-clearing",
+     "label": "PaymentLifecycle.validatePaymentForClearing",
+     "proven": true,
+     "template": "java/payment-lifecycle-validate-clearing"
+    },
+    {
+     "id": "payment-order-validate",
+     "label": "PaymentOrderLifecycle.validatePaymentOrderRecord",
+     "proven": true,
+     "template": "java/payment-order-validate"
+    }
+   ]
+  }
+ ],
+ "templates": {
+  "infobasic/vvr": {
+   "id": "infobasic/vvr",
+   "language": "infobasic",
+   "type": "vvr",
+   "label": "Validation routine (VVR)",
+   "description": "Field validation routine (VERSION VALIDATION.RTN): rejects an empty value typed into the field (COMI). R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package (R25 requires $PACKAGE for every routine)",
+     "kind": "package",
+     "example": "SAMPLE.Legacy"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "sampleRoutine"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "V.SAMPLE.CHECK"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Sample routine"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field it validates",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Error message",
+     "kind": "text",
+     "example": "FIELD IS MANDATORY"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}() { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : VVR\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\n    SUBROUTINE {{ROUTINE_NAME}}\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n    $INSERT I_F.{{APP}}\n\n    IF AF NE {{FIELD}} THEN RETURN\n    IF COMI EQ '' THEN\n        ETEXT = '{{ERROR_TEXT}}'\n        CALL STORE.END.ERROR\n    END\n    RETURN\nEND\n"
+   },
+   "golden": {
+    "case": "infobasic-vvr",
+    "userInputs": {
+     "DESCRIPTION": "Golden case",
+     "AUTHOR": "golden-case",
+     "PACKAGE": "GOLDEN.Legacy",
+     "METHOD_NAME": "vGoldenVvr",
+     "ROUTINE_NAME": "V.GOLDEN.VVR",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.MNEMONIC",
+     "ERROR_TEXT": "MNEMONIC IS MANDATORY"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "vGoldenVvr",
+      "ROUTINE_NAME": "V.GOLDEN.VVR",
+      "APP": "CUSTOMER",
+      "FIELD": "EB.CUS.MNEMONIC",
+      "ERROR_TEXT": "MNEMONIC IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "MNEMONIC",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "vGoldenVvr",
+      "ROUTINE_NAME": "V.GOLDEN.VVR",
+      "APP": "CUSTOMER",
+      "FIELD": "EB.CUS.MNEMONIC",
+      "ERROR_TEXT": "MNEMONIC IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "MNEMONIC",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GOLDEN.Legacy.component": "component GOLDEN.Legacy\nmetamodelVersion 1.6\n\n    public method vGoldenVvr() { jBC: V.GOLDEN.VVR }\n",
+     "V.GOLDEN.VVR.b": "*-----------------------------------------------------------------------------\n* Program    : V.GOLDEN.VVR\n* Type       : VVR\n* Description: Golden case\n* Application: CUSTOMER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Legacy\n    SUBROUTINE V.GOLDEN.VVR\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n    $INSERT I_F.CUSTOMER\n\n    IF AF NE EB.CUS.MNEMONIC THEN RETURN\n    IF COMI EQ '' THEN\n        ETEXT = 'MNEMONIC IS MANDATORY'\n        CALL STORE.END.ERROR\n    END\n    RETURN\nEND\n"
+    }
+   }
+  },
+  "infobasic/vir": {
+   "id": "infobasic/vir",
+   "language": "infobasic",
+   "type": "vir",
+   "label": "Input routine (VIR)",
+   "description": "Record input routine (VERSION INPUT.ROUTINE): rejects the record when a field in R.NEW is empty. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package (R25 requires $PACKAGE for every routine)",
+     "kind": "package",
+     "example": "SAMPLE.Legacy"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "sampleRoutine"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "V.SAMPLE.CHECK"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Sample routine"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Error message",
+     "kind": "text",
+     "example": "FIELD IS MANDATORY"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}() { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : VIR\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\n    SUBROUTINE {{ROUTINE_NAME}}\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n    $INSERT I_F.{{APP}}\n\n    Y.VALUE = R.NEW({{FIELD}})\n    IF Y.VALUE EQ '' THEN\n        AF = {{FIELD}}\n        ETEXT = '{{ERROR_TEXT}}'\n        CALL STORE.END.ERROR\n    END\n    RETURN\nEND\n"
+   },
+   "golden": {
+    "case": "infobasic-vir",
+    "userInputs": {
+     "DESCRIPTION": "Golden case",
+     "AUTHOR": "golden-case",
+     "PACKAGE": "GOLDEN.Legacy",
+     "METHOD_NAME": "vGoldenVir",
+     "ROUTINE_NAME": "V.GOLDEN.VIR",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR",
+     "ERROR_TEXT": "SECTOR IS MANDATORY"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "vGoldenVir",
+      "ROUTINE_NAME": "V.GOLDEN.VIR",
+      "APP": "CUSTOMER",
+      "FIELD": "EB.CUS.SECTOR",
+      "ERROR_TEXT": "SECTOR IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "vGoldenVir",
+      "ROUTINE_NAME": "V.GOLDEN.VIR",
+      "APP": "CUSTOMER",
+      "FIELD": "EB.CUS.SECTOR",
+      "ERROR_TEXT": "SECTOR IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GOLDEN.Legacy.component": "component GOLDEN.Legacy\nmetamodelVersion 1.6\n\n    public method vGoldenVir() { jBC: V.GOLDEN.VIR }\n",
+     "V.GOLDEN.VIR.b": "*-----------------------------------------------------------------------------\n* Program    : V.GOLDEN.VIR\n* Type       : VIR\n* Description: Golden case\n* Application: CUSTOMER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Legacy\n    SUBROUTINE V.GOLDEN.VIR\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n    $INSERT I_F.CUSTOMER\n\n    Y.VALUE = R.NEW(EB.CUS.SECTOR)\n    IF Y.VALUE EQ '' THEN\n        AF = EB.CUS.SECTOR\n        ETEXT = 'SECTOR IS MANDATORY'\n        CALL STORE.END.ERROR\n    END\n    RETURN\nEND\n"
+    }
+   }
+  },
+  "infobasic/var": {
+   "id": "infobasic/var",
+   "language": "infobasic",
+   "type": "var",
+   "label": "Authorisation routine (VAR)",
+   "description": "Authorisation routine (VERSION AUTH.ROUTINE): reads the record referenced by a field (OPF + F.READ) and stops if a field of it is empty. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package (R25 requires $PACKAGE for every routine)",
+     "kind": "package",
+     "example": "SAMPLE.Legacy"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "sampleRoutine"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "V.SAMPLE.CHECK"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Sample routine"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field holding the linked record id",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "LINK_APP",
+     "label": "Linked application",
+     "kind": "app"
+    },
+    {
+     "id": "LINK_FIELD",
+     "label": "Field of the linked record that must be set",
+     "kind": "field",
+     "of": "LINK_APP"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Error message",
+     "kind": "text",
+     "example": "LINKED RECORD IS INCOMPLETE"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}() { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : VAR\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\n    SUBROUTINE {{ROUTINE_NAME}}\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n    $INSERT I_F.{{APP}}\n    $INSERT I_F.{{LINK_APP}}\n\n    FN.LINK = 'F.{{LINK_APP}}'\n    F.LINK = ''\n    CALL OPF(FN.LINK, F.LINK)\n\n    Y.LINK.ID = R.NEW({{FIELD}})\n    R.LINK = ''\n    Y.READ.ERR = ''\n    CALL F.READ(FN.LINK, Y.LINK.ID, R.LINK, F.LINK, Y.READ.ERR)\n    IF Y.READ.ERR NE '' OR R.LINK<{{LINK_FIELD}}> EQ '' THEN\n        ETEXT = '{{ERROR_TEXT}}'\n        CALL STORE.END.ERROR\n    END\n    RETURN\nEND\n"
+   },
+   "golden": {
+    "case": "infobasic-var",
+    "userInputs": {
+     "DESCRIPTION": "Golden case",
+     "AUTHOR": "golden-case",
+     "PACKAGE": "GOLDEN.Legacy",
+     "METHOD_NAME": "vGoldenVar",
+     "ROUTINE_NAME": "V.GOLDEN.VAR",
+     "APP": "FUNDS.TRANSFER",
+     "FIELD": "FT.DEBIT.ACCT.NO",
+     "LINK_APP": "ACCOUNT",
+     "LINK_FIELD": "AC.CATEGORY",
+     "ERROR_TEXT": "DEBIT ACCOUNT HAS NO CATEGORY"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "vGoldenVar",
+      "ROUTINE_NAME": "V.GOLDEN.VAR",
+      "APP": "FUNDS.TRANSFER",
+      "FIELD": "FT.DEBIT.ACCT.NO",
+      "LINK_APP": "ACCOUNT",
+      "LINK_FIELD": "AC.CATEGORY",
+      "ERROR_TEXT": "DEBIT ACCOUNT HAS NO CATEGORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "DEBIT.ACCT.NO",
+      "LINK_FIELD_NAME": "CATEGORY",
+      "APP_CLASS": "FundsTransfer",
+      "APP_PACKAGE": "fundstransfer",
+      "RECORD_CLASS": "FundsTransfer",
+      "RECORD_PACKAGE": "fundstransfer",
+      "LINK_APP_CLASS": "Account",
+      "LINK_APP_PACKAGE": "account"
+     },
+     "R25": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "vGoldenVar",
+      "ROUTINE_NAME": "V.GOLDEN.VAR",
+      "APP": "FUNDS.TRANSFER",
+      "FIELD": "FT.DEBIT.ACCT.NO",
+      "LINK_APP": "ACCOUNT",
+      "LINK_FIELD": "AC.CATEGORY",
+      "ERROR_TEXT": "DEBIT ACCOUNT HAS NO CATEGORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "DEBIT.ACCT.NO",
+      "LINK_FIELD_NAME": "CATEGORY",
+      "APP_CLASS": "FundsTransfer",
+      "APP_PACKAGE": "fundstransfer",
+      "RECORD_CLASS": "FundsTransfer",
+      "RECORD_PACKAGE": "fundstransfer",
+      "LINK_APP_CLASS": "Account",
+      "LINK_APP_PACKAGE": "account"
+     }
+    },
+    "output": {
+     "GOLDEN.Legacy.component": "component GOLDEN.Legacy\nmetamodelVersion 1.6\n\n    public method vGoldenVar() { jBC: V.GOLDEN.VAR }\n",
+     "V.GOLDEN.VAR.b": "*-----------------------------------------------------------------------------\n* Program    : V.GOLDEN.VAR\n* Type       : VAR\n* Description: Golden case\n* Application: FUNDS.TRANSFER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Legacy\n    SUBROUTINE V.GOLDEN.VAR\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n    $INSERT I_F.FUNDS.TRANSFER\n    $INSERT I_F.ACCOUNT\n\n    FN.LINK = 'F.ACCOUNT'\n    F.LINK = ''\n    CALL OPF(FN.LINK, F.LINK)\n\n    Y.LINK.ID = R.NEW(FT.DEBIT.ACCT.NO)\n    R.LINK = ''\n    Y.READ.ERR = ''\n    CALL F.READ(FN.LINK, Y.LINK.ID, R.LINK, F.LINK, Y.READ.ERR)\n    IF Y.READ.ERR NE '' OR R.LINK<AC.CATEGORY> EQ '' THEN\n        ETEXT = 'DEBIT ACCOUNT HAS NO CATEGORY'\n        CALL STORE.END.ERROR\n    END\n    RETURN\nEND\n"
+    }
+   }
+  },
+  "infobasic/nofile": {
+   "id": "infobasic/nofile",
+   "language": "infobasic",
+   "type": "nofile",
+   "label": "NoFile enquiry",
+   "description": "NOFILE enquiry routine: returns the ids of APP whose FIELD equals the enquiry selection value. R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package (R25 requires $PACKAGE for every routine)",
+     "kind": "package",
+     "example": "SAMPLE.Legacy"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "sampleRoutine"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "V.SAMPLE.CHECK"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Sample routine"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Selection field",
+     "kind": "field",
+     "of": "APP"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}(OUT idList string) { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : NOFILE\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\n    SUBROUTINE {{ROUTINE_NAME}}(Y.ID.LIST)\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n    $INSERT I_ENQUIRY.COMMON\n\n    Y.ID.LIST = ''\n    Y.SEL.VALUE = ''\n    LOCATE '{{FIELD_NAME}}' IN D.FIELDS<1> SETTING Y.POS THEN\n        Y.SEL.VALUE = D.RANGE.AND.VALUE<Y.POS>\n    END\n\n    FN.APP = 'F.{{APP}}'\n    F.APP = ''\n    CALL OPF(FN.APP, F.APP)\n    SEL.CMD = 'SELECT ':FN.APP:' WITH {{FIELD_NAME}} EQ ':DQUOTE(Y.SEL.VALUE)\n    SEL.LIST = ''\n    NO.OF.REC = ''\n    SEL.ERR = ''\n    CALL EB.READLIST(SEL.CMD, SEL.LIST, '', NO.OF.REC, SEL.ERR)\n    Y.ID.LIST = SEL.LIST\n    RETURN\nEND\n"
+   },
+   "golden": {
+    "case": "infobasic-nofile",
+    "userInputs": {
+     "DESCRIPTION": "Golden case",
+     "AUTHOR": "golden-case",
+     "PACKAGE": "GOLDEN.Legacy",
+     "METHOD_NAME": "eGoldenNofile",
+     "ROUTINE_NAME": "E.GOLDEN.NOFILE",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "eGoldenNofile",
+      "ROUTINE_NAME": "E.GOLDEN.NOFILE",
+      "APP": "CUSTOMER",
+      "FIELD": "EB.CUS.SECTOR",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "eGoldenNofile",
+      "ROUTINE_NAME": "E.GOLDEN.NOFILE",
+      "APP": "CUSTOMER",
+      "FIELD": "EB.CUS.SECTOR",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GOLDEN.Legacy.component": "component GOLDEN.Legacy\nmetamodelVersion 1.6\n\n    public method eGoldenNofile(OUT idList string) { jBC: E.GOLDEN.NOFILE }\n",
+     "E.GOLDEN.NOFILE.b": "*-----------------------------------------------------------------------------\n* Program    : E.GOLDEN.NOFILE\n* Type       : NOFILE\n* Description: Golden case\n* Application: CUSTOMER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Legacy\n    SUBROUTINE E.GOLDEN.NOFILE(Y.ID.LIST)\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n    $INSERT I_ENQUIRY.COMMON\n\n    Y.ID.LIST = ''\n    Y.SEL.VALUE = ''\n    LOCATE 'SECTOR' IN D.FIELDS<1> SETTING Y.POS THEN\n        Y.SEL.VALUE = D.RANGE.AND.VALUE<Y.POS>\n    END\n\n    FN.APP = 'F.CUSTOMER'\n    F.APP = ''\n    CALL OPF(FN.APP, F.APP)\n    SEL.CMD = 'SELECT ':FN.APP:' WITH SECTOR EQ ':DQUOTE(Y.SEL.VALUE)\n    SEL.LIST = ''\n    NO.OF.REC = ''\n    SEL.ERR = ''\n    CALL EB.READLIST(SEL.CMD, SEL.LIST, '', NO.OF.REC, SEL.ERR)\n    Y.ID.LIST = SEL.LIST\n    RETURN\nEND\n"
+    }
+   }
+  },
+  "infobasic/ofs-routine": {
+   "id": "infobasic/ofs-routine",
+   "language": "infobasic",
+   "type": "ofs-routine",
+   "label": "OFS routine (OFS.POST.MESSAGE)",
+   "description": "Posts an OFS input message that sets one field of a record, via OFS.POST.MESSAGE (OFS.MESSAGE.SERVICE must be running). R25 requires $PACKAGE plus a .component declaration for every routine, so both are generated.",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package (R25 requires $PACKAGE for every routine)",
+     "kind": "package",
+     "example": "SAMPLE.Legacy"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "sampleRoutine"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "V.SAMPLE.CHECK"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Sample routine"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "VERSION_NAME",
+     "label": "Version name (after the comma)",
+     "kind": "text",
+     "example": "SAMPLE.OFS"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field to set",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "OFS_SOURCE",
+     "label": "OFS.SOURCE id",
+     "kind": "text",
+     "example": "TEST.OFS"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}(IN recordId string, IN newValue string) { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : OFS\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\n    SUBROUTINE {{ROUTINE_NAME}}(Y.RECORD.ID, Y.NEW.VALUE)\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n\n    OFS.SOURCE.ID = '{{OFS_SOURCE}}'\n    OFS.REC = '{{APP}},{{VERSION_NAME}}/I/PROCESS,//':ID.COMPANY:',':Y.RECORD.ID:',{{FIELD_NAME}}:1:1=':Y.NEW.VALUE\n    OFS.MSG.ID = ''\n    OPTIONS = ''\n    CALL OFS.POST.MESSAGE(OFS.REC, OFS.MSG.ID, OFS.SOURCE.ID, OPTIONS)\n    RETURN\nEND\n"
+   },
+   "golden": {
+    "case": "infobasic-ofs-routine",
+    "userInputs": {
+     "DESCRIPTION": "Golden case",
+     "AUTHOR": "golden-case",
+     "PACKAGE": "GOLDEN.Legacy",
+     "METHOD_NAME": "goldenOfsUpdate",
+     "ROUTINE_NAME": "GOLDEN.OFS.UPDATE",
+     "APP": "CUSTOMER",
+     "VERSION_NAME": "GOLDEN.OFS",
+     "FIELD": "EB.CUS.SECTOR",
+     "OFS_SOURCE": "TEST.OFS"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "goldenOfsUpdate",
+      "ROUTINE_NAME": "GOLDEN.OFS.UPDATE",
+      "APP": "CUSTOMER",
+      "VERSION_NAME": "GOLDEN.OFS",
+      "FIELD": "EB.CUS.SECTOR",
+      "OFS_SOURCE": "TEST.OFS",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Legacy",
+      "METHOD_NAME": "goldenOfsUpdate",
+      "ROUTINE_NAME": "GOLDEN.OFS.UPDATE",
+      "APP": "CUSTOMER",
+      "VERSION_NAME": "GOLDEN.OFS",
+      "FIELD": "EB.CUS.SECTOR",
+      "OFS_SOURCE": "TEST.OFS",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GOLDEN.Legacy.component": "component GOLDEN.Legacy\nmetamodelVersion 1.6\n\n    public method goldenOfsUpdate(IN recordId string, IN newValue string) { jBC: GOLDEN.OFS.UPDATE }\n",
+     "GOLDEN.OFS.UPDATE.b": "*-----------------------------------------------------------------------------\n* Program    : GOLDEN.OFS.UPDATE\n* Type       : OFS\n* Description: Golden case\n* Application: CUSTOMER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Legacy\n    SUBROUTINE GOLDEN.OFS.UPDATE(Y.RECORD.ID, Y.NEW.VALUE)\n    $INSERT I_COMMON\n    $INSERT I_EQUATE\n\n    OFS.SOURCE.ID = 'TEST.OFS'\n    OFS.REC = 'CUSTOMER,GOLDEN.OFS/I/PROCESS,//':ID.COMPANY:',':Y.RECORD.ID:',SECTOR:1:1=':Y.NEW.VALUE\n    OFS.MSG.ID = ''\n    OPTIONS = ''\n    CALL OFS.POST.MESSAGE(OFS.REC, OFS.MSG.ID, OFS.SOURCE.ID, OPTIONS)\n    RETURN\nEND\n"
+    }
+   }
+  },
+  "jbc/validation": {
+   "id": "jbc/validation",
+   "language": "jbc",
+   "type": "validation",
+   "label": "Validation routine (VVR)",
+   "description": "Reject the record when a field is empty. Generates the .b routine and its .component declaration.",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package",
+     "kind": "package",
+     "example": "SAMPLE.Validation"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "V.SAMPLE.CHECK"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "vSampleCheck"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Reject input when the field is empty"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Error message",
+     "kind": "text",
+     "example": "FIELD IS MANDATORY"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}() { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : VVR\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\nSUBROUTINE {{ROUTINE_NAME}}\n    $USING EB.SystemTables\n    $USING {{APP_COMPONENT}}\n\n    lvValue = EB.SystemTables.getRNew({{FIELD}})\n    IF lvValue EQ '' THEN\n        EB.SystemTables.setE('{{ERROR_TEXT}}')\n    END\nRETURN\nEND\n"
+   },
+   "golden": {
+    "case": "jbc-customer-mnemonic-vvr",
+    "userInputs": {
+     "PACKAGE": "GOLDEN.Validation",
+     "ROUTINE_NAME": "V.CUS.MNEMONIC.CHECK",
+     "METHOD_NAME": "vCusMnemonicCheck",
+     "DESCRIPTION": "Reject CUSTOMER input when MNEMONIC is empty",
+     "AUTHOR": "golden-case",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.MNEMONIC",
+     "ERROR_TEXT": "MNEMONIC IS MANDATORY"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "PACKAGE": "GOLDEN.Validation",
+      "ROUTINE_NAME": "V.CUS.MNEMONIC.CHECK",
+      "METHOD_NAME": "vCusMnemonicCheck",
+      "DESCRIPTION": "Reject CUSTOMER input when MNEMONIC is empty",
+      "AUTHOR": "golden-case",
+      "APP": "CUSTOMER",
+      "FIELD": "ST.Customer.Customer.EbCusMnemonic",
+      "ERROR_TEXT": "MNEMONIC IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "MNEMONIC",
+      "APP_COMPONENT": "ST.Customer",
+      "APP_RECORD": "Customer",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "PACKAGE": "GOLDEN.Validation",
+      "ROUTINE_NAME": "V.CUS.MNEMONIC.CHECK",
+      "METHOD_NAME": "vCusMnemonicCheck",
+      "DESCRIPTION": "Reject CUSTOMER input when MNEMONIC is empty",
+      "AUTHOR": "golden-case",
+      "APP": "CUSTOMER",
+      "FIELD": "ST.Customer.Customer.EbCusMnemonic",
+      "ERROR_TEXT": "MNEMONIC IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "MNEMONIC",
+      "APP_COMPONENT": "ST.Customer",
+      "APP_RECORD": "Customer",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GOLDEN.Validation.component": "component GOLDEN.Validation\nmetamodelVersion 1.6\n\n    public method vCusMnemonicCheck() { jBC: V.CUS.MNEMONIC.CHECK }\n",
+     "V.CUS.MNEMONIC.CHECK.b": "*-----------------------------------------------------------------------------\n* Program    : V.CUS.MNEMONIC.CHECK\n* Type       : VVR\n* Description: Reject CUSTOMER input when MNEMONIC is empty\n* Application: CUSTOMER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Validation\nSUBROUTINE V.CUS.MNEMONIC.CHECK\n    $USING EB.SystemTables\n    $USING ST.Customer\n\n    lvValue = EB.SystemTables.getRNew(ST.Customer.Customer.EbCusMnemonic)\n    IF lvValue EQ '' THEN\n        EB.SystemTables.setE('MNEMONIC IS MANDATORY')\n    END\nRETURN\nEND\n"
+    }
+   }
+  },
+  "jbc/get-api": {
+   "id": "jbc/get-api",
+   "language": "jbc",
+   "type": "get-api",
+   "label": "GET method",
+   "description": "Component method that reads a record by id and returns one field. Generates the .b routine and its .component declaration.",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package",
+     "kind": "package",
+     "example": "SAMPLE.Api"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "SAMPLE.GET.VALUE"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "getValue"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Sample component method"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field to return",
+     "kind": "field",
+     "of": "APP"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}(IN recordId string, OUT fieldValue string) { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : GET\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\nSUBROUTINE {{ROUTINE_NAME}}(recordId, fieldValue)\n    $USING {{APP_COMPONENT}}\n\n    fieldValue = ''\n    readErr = ''\n    record = {{APP_COMPONENT}}.{{APP_RECORD}}.Read(recordId, readErr)\n    IF readErr EQ '' THEN\n        fieldValue = record<{{FIELD}}>\n    END\nRETURN\nEND\n"
+   },
+   "golden": {
+    "case": "jbc-get-api",
+    "userInputs": {
+     "DESCRIPTION": "Golden case",
+     "AUTHOR": "golden-case",
+     "PACKAGE": "GOLDEN.Api",
+     "ROUTINE_NAME": "GOLDEN.GET.SECTOR",
+     "METHOD_NAME": "getSector",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Api",
+      "ROUTINE_NAME": "GOLDEN.GET.SECTOR",
+      "METHOD_NAME": "getSector",
+      "APP": "CUSTOMER",
+      "FIELD": "ST.Customer.Customer.EbCusSector",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_COMPONENT": "ST.Customer",
+      "APP_RECORD": "Customer",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Api",
+      "ROUTINE_NAME": "GOLDEN.GET.SECTOR",
+      "METHOD_NAME": "getSector",
+      "APP": "CUSTOMER",
+      "FIELD": "ST.Customer.Customer.EbCusSector",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_COMPONENT": "ST.Customer",
+      "APP_RECORD": "Customer",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GOLDEN.Api.component": "component GOLDEN.Api\nmetamodelVersion 1.6\n\n    public method getSector(IN recordId string, OUT fieldValue string) { jBC: GOLDEN.GET.SECTOR }\n",
+     "GOLDEN.GET.SECTOR.b": "*-----------------------------------------------------------------------------\n* Program    : GOLDEN.GET.SECTOR\n* Type       : GET\n* Description: Golden case\n* Application: CUSTOMER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Api\nSUBROUTINE GOLDEN.GET.SECTOR(recordId, fieldValue)\n    $USING ST.Customer\n\n    fieldValue = ''\n    readErr = ''\n    record = ST.Customer.Customer.Read(recordId, readErr)\n    IF readErr EQ '' THEN\n        fieldValue = record<ST.Customer.Customer.EbCusSector>\n    END\nRETURN\nEND\n"
+    }
+   }
+  },
+  "jbc/write-api": {
+   "id": "jbc/write-api",
+   "language": "jbc",
+   "type": "write-api",
+   "label": "WRITE method (OFS)",
+   "description": "Component method that sets one field of a record by posting an OFS message (EB.Interface.OfsPostMessage; OFS.MESSAGE.SERVICE must be running).",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package",
+     "kind": "package",
+     "example": "SAMPLE.Api"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "SAMPLE.GET.VALUE"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "getValue"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Sample component method"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "VERSION_NAME",
+     "label": "Version name (after the comma)",
+     "kind": "text",
+     "example": "SAMPLE.OFS"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field to set",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "OFS_SOURCE",
+     "label": "OFS.SOURCE id",
+     "kind": "text",
+     "example": "TEST.OFS"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}(IN recordId string, IN newValue string) { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : WRITE\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\nSUBROUTINE {{ROUTINE_NAME}}(recordId, newValue)\n    $USING EB.Interface\n    $USING EB.SystemTables\n\n    ofsSourceId = '{{OFS_SOURCE}}'\n    ofsRecord = '{{APP}},{{VERSION_NAME}}/I/PROCESS,//':EB.SystemTables.getIdCompany():',':recordId:',{{FIELD_NAME}}:1:1=':newValue\n    ofsMsgId = ''\n    options = ''\n    EB.Interface.OfsPostMessage(ofsRecord, ofsMsgId, ofsSourceId, options)\nRETURN\nEND\n"
+   },
+   "golden": {
+    "case": "jbc-write-api",
+    "userInputs": {
+     "DESCRIPTION": "Golden case",
+     "AUTHOR": "golden-case",
+     "PACKAGE": "GOLDEN.Api",
+     "ROUTINE_NAME": "GOLDEN.SET.SECTOR",
+     "METHOD_NAME": "setSector",
+     "APP": "CUSTOMER",
+     "VERSION_NAME": "GOLDEN.OFS",
+     "FIELD": "EB.CUS.SECTOR",
+     "OFS_SOURCE": "TEST.OFS"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Api",
+      "ROUTINE_NAME": "GOLDEN.SET.SECTOR",
+      "METHOD_NAME": "setSector",
+      "APP": "CUSTOMER",
+      "VERSION_NAME": "GOLDEN.OFS",
+      "FIELD": "ST.Customer.Customer.EbCusSector",
+      "OFS_SOURCE": "TEST.OFS",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_COMPONENT": "ST.Customer",
+      "APP_RECORD": "Customer",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Api",
+      "ROUTINE_NAME": "GOLDEN.SET.SECTOR",
+      "METHOD_NAME": "setSector",
+      "APP": "CUSTOMER",
+      "VERSION_NAME": "GOLDEN.OFS",
+      "FIELD": "ST.Customer.Customer.EbCusSector",
+      "OFS_SOURCE": "TEST.OFS",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_COMPONENT": "ST.Customer",
+      "APP_RECORD": "Customer",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GOLDEN.Api.component": "component GOLDEN.Api\nmetamodelVersion 1.6\n\n    public method setSector(IN recordId string, IN newValue string) { jBC: GOLDEN.SET.SECTOR }\n",
+     "GOLDEN.SET.SECTOR.b": "*-----------------------------------------------------------------------------\n* Program    : GOLDEN.SET.SECTOR\n* Type       : WRITE\n* Description: Golden case\n* Application: CUSTOMER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Api\nSUBROUTINE GOLDEN.SET.SECTOR(recordId, newValue)\n    $USING EB.Interface\n    $USING EB.SystemTables\n\n    ofsSourceId = 'TEST.OFS'\n    ofsRecord = 'CUSTOMER,GOLDEN.OFS/I/PROCESS,//':EB.SystemTables.getIdCompany():',':recordId:',SECTOR:1:1=':newValue\n    ofsMsgId = ''\n    options = ''\n    EB.Interface.OfsPostMessage(ofsRecord, ofsMsgId, ofsSourceId, options)\nRETURN\nEND\n"
+    }
+   }
+  },
+  "jbc/nofile": {
+   "id": "jbc/nofile",
+   "language": "jbc",
+   "type": "nofile",
+   "label": "NoFile enquiry",
+   "description": "Componentised NOFILE enquiry routine: returns the ids of APP whose FIELD equals the enquiry selection value.",
+   "inputs": [
+    {
+     "id": "PACKAGE",
+     "label": "Package",
+     "kind": "package",
+     "example": "SAMPLE.Api"
+    },
+    {
+     "id": "ROUTINE_NAME",
+     "label": "Routine name",
+     "kind": "routineName",
+     "example": "SAMPLE.GET.VALUE"
+    },
+    {
+     "id": "METHOD_NAME",
+     "label": "Component method",
+     "kind": "identifier",
+     "example": "getValue"
+    },
+    {
+     "id": "DESCRIPTION",
+     "label": "Description",
+     "kind": "text",
+     "example": "Sample component method"
+    },
+    {
+     "id": "AUTHOR",
+     "label": "Author",
+     "kind": "text",
+     "example": "developer"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Selection field",
+     "kind": "field",
+     "of": "APP"
+    }
+   ],
+   "files": {
+    "{{PACKAGE}}.component": "component {{PACKAGE}}\nmetamodelVersion 1.6\n\n    public method {{METHOD_NAME}}(OUT returnData string) { jBC: {{ROUTINE_NAME}} }\n",
+    "{{ROUTINE_NAME}}.b": "*-----------------------------------------------------------------------------\n* Program    : {{ROUTINE_NAME}}\n* Type       : NOFILE\n* Description: {{DESCRIPTION}}\n* Application: {{APP}}\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* {{TODAY}} | {{AUTHOR}} | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE {{PACKAGE}}\nSUBROUTINE {{ROUTINE_NAME}}(returnData)\n    $USING EB.Reports\n    $USING EB.DataAccess\n\n    returnData = ''\n    selValue = ''\n    LOCATE '{{FIELD_NAME}}' IN EB.Reports.getDFields()<1> SETTING fieldPos THEN\n        selValue = EB.Reports.getDRangeAndValue()<fieldPos>\n    END\n    selCmd = 'SELECT F.{{APP}} WITH {{FIELD_NAME}} EQ ':DQUOTE(selValue)\n    idList = ''\n    noOfRecords = ''\n    retCode = ''\n    EB.DataAccess.Readlist(selCmd, idList, '', noOfRecords, retCode)\n    returnData = idList\nRETURN\nEND\n"
+   },
+   "golden": {
+    "case": "jbc-nofile",
+    "userInputs": {
+     "DESCRIPTION": "Golden case",
+     "AUTHOR": "golden-case",
+     "PACKAGE": "GOLDEN.Api",
+     "ROUTINE_NAME": "E.GOLDEN.JBC.NOFILE",
+     "METHOD_NAME": "listBySector",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Api",
+      "ROUTINE_NAME": "E.GOLDEN.JBC.NOFILE",
+      "METHOD_NAME": "listBySector",
+      "APP": "CUSTOMER",
+      "FIELD": "ST.Customer.Customer.EbCusSector",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_COMPONENT": "ST.Customer",
+      "APP_RECORD": "Customer",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "DESCRIPTION": "Golden case",
+      "AUTHOR": "golden-case",
+      "PACKAGE": "GOLDEN.Api",
+      "ROUTINE_NAME": "E.GOLDEN.JBC.NOFILE",
+      "METHOD_NAME": "listBySector",
+      "APP": "CUSTOMER",
+      "FIELD": "ST.Customer.Customer.EbCusSector",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_COMPONENT": "ST.Customer",
+      "APP_RECORD": "Customer",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GOLDEN.Api.component": "component GOLDEN.Api\nmetamodelVersion 1.6\n\n    public method listBySector(OUT returnData string) { jBC: E.GOLDEN.JBC.NOFILE }\n",
+     "E.GOLDEN.JBC.NOFILE.b": "*-----------------------------------------------------------------------------\n* Program    : E.GOLDEN.JBC.NOFILE\n* Type       : NOFILE\n* Description: Golden case\n* Application: CUSTOMER\n*\n* Modification History:\n* Date       | Author          | Description\n* -----------|-----------------|--------------------------------------------\n* 2026-10-02 | golden-case | Initial version\n*-----------------------------------------------------------------------------\n$PACKAGE GOLDEN.Api\nSUBROUTINE E.GOLDEN.JBC.NOFILE(returnData)\n    $USING EB.Reports\n    $USING EB.DataAccess\n\n    returnData = ''\n    selValue = ''\n    LOCATE 'SECTOR' IN EB.Reports.getDFields()<1> SETTING fieldPos THEN\n        selValue = EB.Reports.getDRangeAndValue()<fieldPos>\n    END\n    selCmd = 'SELECT F.CUSTOMER WITH SECTOR EQ ':DQUOTE(selValue)\n    idList = ''\n    noOfRecords = ''\n    retCode = ''\n    EB.DataAccess.Readlist(selCmd, idList, '', noOfRecords, retCode)\n    returnData = idList\nRETURN\nEND\n"
+    }
+   }
+  },
+  "java/record-lifecycle-check-id": {
+   "id": "java/record-lifecycle-check-id",
+   "language": "java",
+   "type": "record-lifecycle-check-id",
+   "label": "RecordLifecycle.checkId (ID routine)",
+   "description": "Version ID routine: prefixes the record id when it is keyed without the prefix.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.hook"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleHook"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "ID_PREFIX",
+     "label": "Id prefix",
+     "kind": "text",
+     "example": "SMP"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: {{APP}}\n// Hook type: RecordLifecycle.checkId\n\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\n\npublic class {{CLASS_NAME}} extends RecordLifecycle {\n\n    @Override\n    public String checkId(String currentRecordId, TransactionContext transactionContext) {\n        if (currentRecordId == null || currentRecordId.isEmpty() || currentRecordId.startsWith(\"{{ID_PREFIX}}\")) {\n            return currentRecordId;\n        }\n        return \"{{ID_PREFIX}}\" + currentRecordId;\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-record-lifecycle-check-id",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenCheckId",
+     "APP": "CUSTOMER",
+     "ID_PREFIX": "SMP"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenCheckId",
+      "APP": "CUSTOMER",
+      "ID_PREFIX": "SMP",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenCheckId",
+      "APP": "CUSTOMER",
+      "ID_PREFIX": "SMP",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GoldenCheckId.java": "package com.temenos.t24.custom.golden;\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: CUSTOMER\n// Hook type: RecordLifecycle.checkId\n\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\n\npublic class GoldenCheckId extends RecordLifecycle {\n\n    @Override\n    public String checkId(String currentRecordId, TransactionContext transactionContext) {\n        if (currentRecordId == null || currentRecordId.isEmpty() || currentRecordId.startsWith(\"SMP\")) {\n            return currentRecordId;\n        }\n        return \"SMP\" + currentRecordId;\n    }\n}\n"
+    }
+   }
+  },
+  "java/record-lifecycle-default": {
+   "id": "java/record-lifecycle-default",
+   "language": "java",
+   "type": "record-lifecycle-default",
+   "label": "RecordLifecycle.defaultFieldValues (check-record / auto-field routine)",
+   "description": "Defaults a field when it is empty.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.hook"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleHook"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "DEFAULT_VALUE",
+     "label": "Default value",
+     "kind": "text",
+     "example": "1001"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: {{APP}}\n// Hook type: RecordLifecycle.defaultFieldValues\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.{{RECORD_PACKAGE}}.{{RECORD_CLASS}}Record;\n\npublic class {{CLASS_NAME}} extends RecordLifecycle {\n\n    @Override\n    public void defaultFieldValues(String application, String currentRecordId, TStructure currentRecord,\n            TStructure unauthorisedRecord, TStructure liveRecord, TransactionContext transactionContext) {\n\n        {{RECORD_CLASS}}Record rec = new {{RECORD_CLASS}}Record(currentRecord);\n        String value = rec.get{{FIELD}}().getValue();\n        if (value == null || value.isEmpty()) {\n            rec.set{{FIELD}}(\"{{DEFAULT_VALUE}}\");\n            currentRecord.set(rec.toStructure());\n        }\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-record-lifecycle-default",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenDefault",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR",
+     "DEFAULT_VALUE": "1001"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenDefault",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "DEFAULT_VALUE": "1001",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenDefault",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "DEFAULT_VALUE": "1001",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GoldenDefault.java": "package com.temenos.t24.custom.golden;\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: CUSTOMER\n// Hook type: RecordLifecycle.defaultFieldValues\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.customer.CustomerRecord;\n\npublic class GoldenDefault extends RecordLifecycle {\n\n    @Override\n    public void defaultFieldValues(String application, String currentRecordId, TStructure currentRecord,\n            TStructure unauthorisedRecord, TStructure liveRecord, TransactionContext transactionContext) {\n\n        CustomerRecord rec = new CustomerRecord(currentRecord);\n        String value = rec.getSector().getValue();\n        if (value == null || value.isEmpty()) {\n            rec.setSector(\"1001\");\n            currentRecord.set(rec.toStructure());\n        }\n    }\n}\n"
+    }
+   }
+  },
+  "java/record-lifecycle-hot-field": {
+   "id": "java/record-lifecycle-hot-field",
+   "language": "java",
+   "type": "record-lifecycle-hot-field",
+   "label": "RecordLifecycle.defaultFieldValuesOnHotField (hot field)",
+   "description": "When the hot field is changed, sets another field to a value.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.hook"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleHook"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Hot field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "TARGET_FIELD",
+     "label": "Field to set",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "DEFAULT_VALUE",
+     "label": "Value to set",
+     "kind": "text",
+     "example": "1001"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: {{APP}}\n// Hook type: RecordLifecycle.defaultFieldValuesOnHotField\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.{{RECORD_PACKAGE}}.{{RECORD_CLASS}}Record;\nimport com.temenos.t24.api.complex.eb.templatehook.InputValue;\n\npublic class {{CLASS_NAME}} extends RecordLifecycle {\n\n    @Override\n    public void defaultFieldValuesOnHotField(String application, String currentRecordId, TStructure currentRecord,\n            InputValue currentInputValue, TStructure unauthorisedRecord, TStructure liveRecord,\n            TransactionContext transactionContext) {\n\n        if (!\"{{FIELD_NAME}}\".equals(currentInputValue.getFieldName())) {\n            return;\n        }\n        {{RECORD_CLASS}}Record rec = new {{RECORD_CLASS}}Record(currentRecord);\n        rec.set{{TARGET_FIELD}}(\"{{DEFAULT_VALUE}}\");\n        currentRecord.set(rec.toStructure());\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-record-lifecycle-hot-field",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenHotField",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR",
+     "TARGET_FIELD": "EB.CUS.MNEMONIC",
+     "DEFAULT_VALUE": "SAMPLE"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenHotField",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "TARGET_FIELD": "Mnemonic",
+      "DEFAULT_VALUE": "SAMPLE",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "TARGET_FIELD_NAME": "MNEMONIC",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenHotField",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "TARGET_FIELD": "Mnemonic",
+      "DEFAULT_VALUE": "SAMPLE",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "TARGET_FIELD_NAME": "MNEMONIC",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GoldenHotField.java": "package com.temenos.t24.custom.golden;\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: CUSTOMER\n// Hook type: RecordLifecycle.defaultFieldValuesOnHotField\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.customer.CustomerRecord;\nimport com.temenos.t24.api.complex.eb.templatehook.InputValue;\n\npublic class GoldenHotField extends RecordLifecycle {\n\n    @Override\n    public void defaultFieldValuesOnHotField(String application, String currentRecordId, TStructure currentRecord,\n            InputValue currentInputValue, TStructure unauthorisedRecord, TStructure liveRecord,\n            TransactionContext transactionContext) {\n\n        if (!\"SECTOR\".equals(currentInputValue.getFieldName())) {\n            return;\n        }\n        CustomerRecord rec = new CustomerRecord(currentRecord);\n        rec.setMnemonic(\"SAMPLE\");\n        currentRecord.set(rec.toStructure());\n    }\n}\n"
+    }
+   }
+  },
+  "java/record-lifecycle-validate": {
+   "id": "java/record-lifecycle-validate",
+   "language": "java",
+   "type": "record-lifecycle-validate",
+   "label": "RecordLifecycle.validateRecord",
+   "description": "L3 Java hook that rejects the record when a field is empty.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.hook"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleFieldGuard"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Error message",
+     "kind": "text",
+     "example": "FIELD IS MANDATORY"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: {{APP}}\n// Hook type: RecordLifecycle\n\nimport com.temenos.api.TStructure;\nimport com.temenos.api.TValidationResponse;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.{{RECORD_PACKAGE}}.{{RECORD_CLASS}}Record;\n\npublic class {{CLASS_NAME}} extends RecordLifecycle {\n\n    @Override\n    public TValidationResponse validateRecord(String application, String currentRecordId,\n            TStructure currentRecord, TStructure unauthorisedRecord,\n            TStructure liveRecord, TransactionContext transactionContext) {\n\n        {{RECORD_CLASS}}Record rec = new {{RECORD_CLASS}}Record(currentRecord);\n        String value = rec.get{{FIELD}}().getValue();\n        if (value == null || value.isEmpty()) {\n            rec.get{{FIELD}}().setError(\"{{ERROR_TEXT}}\");\n        }\n        currentRecord.set(rec.toStructure());\n        return rec.getValidationResponse();\n    }\n}\n"
+   },
+   "golden": {
+    "case": "l3-account-category-guard",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "AcCategoryGuard",
+     "APP": "ACCOUNT",
+     "FIELD": "AC.CATEGORY",
+     "ERROR_TEXT": "CATEGORY IS MANDATORY"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "AcCategoryGuard",
+      "APP": "ACCOUNT",
+      "FIELD": "Category",
+      "ERROR_TEXT": "CATEGORY IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "CATEGORY",
+      "APP_CLASS": "Account",
+      "APP_PACKAGE": "account",
+      "RECORD_CLASS": "Account",
+      "RECORD_PACKAGE": "account"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "AcCategoryGuard",
+      "APP": "ACCOUNT",
+      "FIELD": "Category",
+      "ERROR_TEXT": "CATEGORY IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "CATEGORY",
+      "APP_CLASS": "Account",
+      "APP_PACKAGE": "account",
+      "RECORD_CLASS": "Account",
+      "RECORD_PACKAGE": "account"
+     }
+    },
+    "output": {
+     "AcCategoryGuard.java": "package com.temenos.t24.custom.golden;\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: ACCOUNT\n// Hook type: RecordLifecycle\n\nimport com.temenos.api.TStructure;\nimport com.temenos.api.TValidationResponse;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.account.AccountRecord;\n\npublic class AcCategoryGuard extends RecordLifecycle {\n\n    @Override\n    public TValidationResponse validateRecord(String application, String currentRecordId,\n            TStructure currentRecord, TStructure unauthorisedRecord,\n            TStructure liveRecord, TransactionContext transactionContext) {\n\n        AccountRecord rec = new AccountRecord(currentRecord);\n        String value = rec.getCategory().getValue();\n        if (value == null || value.isEmpty()) {\n            rec.getCategory().setError(\"CATEGORY IS MANDATORY\");\n        }\n        currentRecord.set(rec.toStructure());\n        return rec.getValidationResponse();\n    }\n}\n"
+    }
+   }
+  },
+  "java/record-lifecycle-validate-field": {
+   "id": "java/record-lifecycle-validate-field",
+   "language": "java",
+   "type": "record-lifecycle-validate-field",
+   "label": "RecordLifecycle.validateField (deprecated in R25)",
+   "description": "Field validation hook. Deprecated in R25 -- prefer validateRecord or defaultFieldValues.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.hook"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleHook"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Error message",
+     "kind": "text",
+     "example": "FIELD IS MANDATORY"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: {{APP}}\n// Hook type: RecordLifecycle.validateField (deprecated)\n\nimport com.temenos.api.TStructure;\nimport com.temenos.api.TValidationResponse;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.{{RECORD_PACKAGE}}.{{RECORD_CLASS}}Record;\n\npublic class {{CLASS_NAME}} extends RecordLifecycle {\n\n    @Override\n    public TValidationResponse validateField(String application, String recordId, String fieldData,\n            TStructure record) {\n\n        {{RECORD_CLASS}}Record rec = new {{RECORD_CLASS}}Record(record);\n        if (fieldData == null || fieldData.isEmpty()) {\n            rec.get{{FIELD}}().setError(\"{{ERROR_TEXT}}\");\n        }\n        return rec.getValidationResponse();\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-record-lifecycle-validate-field",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenValidateField",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR",
+     "ERROR_TEXT": "SECTOR IS MANDATORY"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenValidateField",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "ERROR_TEXT": "SECTOR IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenValidateField",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "ERROR_TEXT": "SECTOR IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GoldenValidateField.java": "package com.temenos.t24.custom.golden;\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: CUSTOMER\n// Hook type: RecordLifecycle.validateField (deprecated)\n\nimport com.temenos.api.TStructure;\nimport com.temenos.api.TValidationResponse;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.customer.CustomerRecord;\n\npublic class GoldenValidateField extends RecordLifecycle {\n\n    @Override\n    public TValidationResponse validateField(String application, String recordId, String fieldData,\n            TStructure record) {\n\n        CustomerRecord rec = new CustomerRecord(record);\n        if (fieldData == null || fieldData.isEmpty()) {\n            rec.getSector().setError(\"SECTOR IS MANDATORY\");\n        }\n        return rec.getValidationResponse();\n    }\n}\n"
+    }
+   }
+  },
+  "java/record-lifecycle-update": {
+   "id": "java/record-lifecycle-update",
+   "language": "java",
+   "type": "record-lifecycle-update",
+   "label": "RecordLifecycle.updateRecord (input / before-auth routine)",
+   "description": "Raises a secondary transaction on another application in the same commit (templatehook.TransactionData).",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.hook"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleHook"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field holding the target record id",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "TARGET_APP",
+     "label": "Target application",
+     "kind": "app"
+    },
+    {
+     "id": "TARGET_VERSION",
+     "label": "Target version (after the comma)",
+     "kind": "text",
+     "example": "SAMPLE.UPDATE"
+    },
+    {
+     "id": "TARGET_FIELD",
+     "label": "Target field to set",
+     "kind": "field",
+     "of": "TARGET_APP"
+    },
+    {
+     "id": "TARGET_VALUE",
+     "label": "Value to set",
+     "kind": "text",
+     "example": "Y"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: {{APP}}\n// Hook type: RecordLifecycle.updateRecord\n\nimport java.util.List;\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionData;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.{{RECORD_PACKAGE}}.{{RECORD_CLASS}}Record;\nimport com.temenos.t24.api.records.{{TARGET_APP_PACKAGE}}.{{TARGET_APP_CLASS}}Record;\n\npublic class {{CLASS_NAME}} extends RecordLifecycle {\n\n    @Override\n    public void updateRecord(String application, String currentRecordId, TStructure currentRecord,\n            TStructure unauthorisedRecord, TStructure liveRecord, TransactionContext transactionContext,\n            List<TransactionData> transactionData, List<TStructure> currentRecords) {\n\n        {{RECORD_CLASS}}Record rec = new {{RECORD_CLASS}}Record(currentRecord);\n        String targetId = rec.get{{FIELD}}().getValue();\n        if (targetId == null || targetId.isEmpty()) {\n            return;\n        }\n        TransactionData txn = new TransactionData();\n        txn.setVersionId(\"{{TARGET_APP}},{{TARGET_VERSION}}\");\n        txn.setFunction(\"I\");\n        txn.setNumberOfAuthoriser(\"0\");\n        txn.setTransactionId(targetId);\n        transactionData.add(txn);\n\n        {{TARGET_APP_CLASS}}Record target = new {{TARGET_APP_CLASS}}Record();\n        target.set{{TARGET_FIELD}}(\"{{TARGET_VALUE}}\");\n        currentRecords.add(target.toStructure());\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-record-lifecycle-update",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenUpdateRecord",
+     "APP": "FUNDS.TRANSFER",
+     "FIELD": "FT.DEBIT.ACCT.NO",
+     "TARGET_APP": "ACCOUNT",
+     "TARGET_VERSION": "GOLDEN.UPDATE",
+     "TARGET_FIELD": "AC.CATEGORY",
+     "TARGET_VALUE": "1001"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenUpdateRecord",
+      "APP": "FUNDS.TRANSFER",
+      "FIELD": "DebitAcctNo",
+      "TARGET_APP": "ACCOUNT",
+      "TARGET_VERSION": "GOLDEN.UPDATE",
+      "TARGET_FIELD": "Category",
+      "TARGET_VALUE": "1001",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "DEBIT.ACCT.NO",
+      "TARGET_FIELD_NAME": "CATEGORY",
+      "APP_CLASS": "FundsTransfer",
+      "APP_PACKAGE": "fundstransfer",
+      "RECORD_CLASS": "FundsTransfer",
+      "RECORD_PACKAGE": "fundstransfer",
+      "TARGET_APP_CLASS": "Account",
+      "TARGET_APP_PACKAGE": "account"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenUpdateRecord",
+      "APP": "FUNDS.TRANSFER",
+      "FIELD": "DebitAcctNo",
+      "TARGET_APP": "ACCOUNT",
+      "TARGET_VERSION": "GOLDEN.UPDATE",
+      "TARGET_FIELD": "Category",
+      "TARGET_VALUE": "1001",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "DEBIT.ACCT.NO",
+      "TARGET_FIELD_NAME": "CATEGORY",
+      "APP_CLASS": "FundsTransfer",
+      "APP_PACKAGE": "fundstransfer",
+      "RECORD_CLASS": "FundsTransfer",
+      "RECORD_PACKAGE": "fundstransfer",
+      "TARGET_APP_CLASS": "Account",
+      "TARGET_APP_PACKAGE": "account"
+     }
+    },
+    "output": {
+     "GoldenUpdateRecord.java": "package com.temenos.t24.custom.golden;\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: FUNDS.TRANSFER\n// Hook type: RecordLifecycle.updateRecord\n\nimport java.util.List;\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionData;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.fundstransfer.FundsTransferRecord;\nimport com.temenos.t24.api.records.account.AccountRecord;\n\npublic class GoldenUpdateRecord extends RecordLifecycle {\n\n    @Override\n    public void updateRecord(String application, String currentRecordId, TStructure currentRecord,\n            TStructure unauthorisedRecord, TStructure liveRecord, TransactionContext transactionContext,\n            List<TransactionData> transactionData, List<TStructure> currentRecords) {\n\n        FundsTransferRecord rec = new FundsTransferRecord(currentRecord);\n        String targetId = rec.getDebitAcctNo().getValue();\n        if (targetId == null || targetId.isEmpty()) {\n            return;\n        }\n        TransactionData txn = new TransactionData();\n        txn.setVersionId(\"ACCOUNT,GOLDEN.UPDATE\");\n        txn.setFunction(\"I\");\n        txn.setNumberOfAuthoriser(\"0\");\n        txn.setTransactionId(targetId);\n        transactionData.add(txn);\n\n        AccountRecord target = new AccountRecord();\n        target.setCategory(\"1001\");\n        currentRecords.add(target.toStructure());\n    }\n}\n"
+    }
+   }
+  },
+  "java/record-lifecycle-post-update": {
+   "id": "java/record-lifecycle-post-update",
+   "language": "java",
+   "type": "record-lifecycle-post-update",
+   "label": "RecordLifecycle.postUpdateRequest (authorisation routine)",
+   "description": "After authorisation, posts an OFS request on another application (servicehook.TransactionData, processed by OFS.MESSAGE.SERVICE).",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.hook"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleHook"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field holding the target record id",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "TARGET_APP",
+     "label": "Target application",
+     "kind": "app"
+    },
+    {
+     "id": "TARGET_VERSION",
+     "label": "Target version (after the comma)",
+     "kind": "text",
+     "example": "SAMPLE.UPDATE"
+    },
+    {
+     "id": "TARGET_FIELD",
+     "label": "Target field to set",
+     "kind": "field",
+     "of": "TARGET_APP"
+    },
+    {
+     "id": "TARGET_VALUE",
+     "label": "Value to set",
+     "kind": "text",
+     "example": "Y"
+    },
+    {
+     "id": "OFS_SOURCE",
+     "label": "OFS.SOURCE id",
+     "kind": "text",
+     "example": "TEST.OFS"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: {{APP}}\n// Hook type: RecordLifecycle.postUpdateRequest\n\nimport java.util.List;\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.servicehook.TransactionData;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.{{RECORD_PACKAGE}}.{{RECORD_CLASS}}Record;\nimport com.temenos.t24.api.records.{{TARGET_APP_PACKAGE}}.{{TARGET_APP_CLASS}}Record;\n\npublic class {{CLASS_NAME}} extends RecordLifecycle {\n\n    @Override\n    public void postUpdateRequest(String application, String currentRecordId, TStructure currentRecord,\n            List<TransactionData> transactionData, List<TStructure> currentRecords,\n            TransactionContext transactionContext) {\n\n        {{RECORD_CLASS}}Record rec = new {{RECORD_CLASS}}Record(currentRecord);\n        String targetId = rec.get{{FIELD}}().getValue();\n        if (targetId == null || targetId.isEmpty()) {\n            return;\n        }\n        TransactionData txn = new TransactionData();\n        txn.setVersionId(\"{{TARGET_APP}},{{TARGET_VERSION}}\");\n        txn.setFunction(\"INPUT\");\n        txn.setNumberOfAuthoriser(\"0\");\n        txn.setSourceId(\"{{OFS_SOURCE}}\");\n        txn.setTransactionId(targetId);\n        transactionData.add(txn);\n\n        {{TARGET_APP_CLASS}}Record target = new {{TARGET_APP_CLASS}}Record();\n        target.set{{TARGET_FIELD}}(\"{{TARGET_VALUE}}\");\n        currentRecords.add(target.toStructure());\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-record-lifecycle-post-update",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenPostUpdate",
+     "APP": "FUNDS.TRANSFER",
+     "FIELD": "FT.DEBIT.ACCT.NO",
+     "TARGET_APP": "ACCOUNT",
+     "TARGET_VERSION": "GOLDEN.UPDATE",
+     "TARGET_FIELD": "AC.CATEGORY",
+     "TARGET_VALUE": "1001",
+     "OFS_SOURCE": "TEST.OFS"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenPostUpdate",
+      "APP": "FUNDS.TRANSFER",
+      "FIELD": "DebitAcctNo",
+      "TARGET_APP": "ACCOUNT",
+      "TARGET_VERSION": "GOLDEN.UPDATE",
+      "TARGET_FIELD": "Category",
+      "TARGET_VALUE": "1001",
+      "OFS_SOURCE": "TEST.OFS",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "DEBIT.ACCT.NO",
+      "TARGET_FIELD_NAME": "CATEGORY",
+      "APP_CLASS": "FundsTransfer",
+      "APP_PACKAGE": "fundstransfer",
+      "RECORD_CLASS": "FundsTransfer",
+      "RECORD_PACKAGE": "fundstransfer",
+      "TARGET_APP_CLASS": "Account",
+      "TARGET_APP_PACKAGE": "account"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenPostUpdate",
+      "APP": "FUNDS.TRANSFER",
+      "FIELD": "DebitAcctNo",
+      "TARGET_APP": "ACCOUNT",
+      "TARGET_VERSION": "GOLDEN.UPDATE",
+      "TARGET_FIELD": "Category",
+      "TARGET_VALUE": "1001",
+      "OFS_SOURCE": "TEST.OFS",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "DEBIT.ACCT.NO",
+      "TARGET_FIELD_NAME": "CATEGORY",
+      "APP_CLASS": "FundsTransfer",
+      "APP_PACKAGE": "fundstransfer",
+      "RECORD_CLASS": "FundsTransfer",
+      "RECORD_PACKAGE": "fundstransfer",
+      "TARGET_APP_CLASS": "Account",
+      "TARGET_APP_PACKAGE": "account"
+     }
+    },
+    "output": {
+     "GoldenPostUpdate.java": "package com.temenos.t24.custom.golden;\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: FUNDS.TRANSFER\n// Hook type: RecordLifecycle.postUpdateRequest\n\nimport java.util.List;\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.servicehook.TransactionData;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\nimport com.temenos.t24.api.records.fundstransfer.FundsTransferRecord;\nimport com.temenos.t24.api.records.account.AccountRecord;\n\npublic class GoldenPostUpdate extends RecordLifecycle {\n\n    @Override\n    public void postUpdateRequest(String application, String currentRecordId, TStructure currentRecord,\n            List<TransactionData> transactionData, List<TStructure> currentRecords,\n            TransactionContext transactionContext) {\n\n        FundsTransferRecord rec = new FundsTransferRecord(currentRecord);\n        String targetId = rec.getDebitAcctNo().getValue();\n        if (targetId == null || targetId.isEmpty()) {\n            return;\n        }\n        TransactionData txn = new TransactionData();\n        txn.setVersionId(\"ACCOUNT,GOLDEN.UPDATE\");\n        txn.setFunction(\"INPUT\");\n        txn.setNumberOfAuthoriser(\"0\");\n        txn.setSourceId(\"TEST.OFS\");\n        txn.setTransactionId(targetId);\n        transactionData.add(txn);\n\n        AccountRecord target = new AccountRecord();\n        target.setCategory(\"1001\");\n        currentRecords.add(target.toStructure());\n    }\n}\n"
+    }
+   }
+  },
+  "java/record-lifecycle-override-auto-approve": {
+   "id": "java/record-lifecycle-override-auto-approve",
+   "language": "java",
+   "type": "record-lifecycle-override-auto-approve",
+   "label": "RecordLifecycle.isOverrideAutoApprove (override hook)",
+   "description": "Auto-approves one specific override (OVERRIDE record SUBROUTINE field, EB.API hook OVERRIDE.SUBROUTINE.HOOK).",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.hook"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleHook"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "OVERRIDE_ID",
+     "label": "Override id to auto-approve",
+     "kind": "text",
+     "example": "SAMPLE.OVERRIDE"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: {{APP}}\n// Hook type: RecordLifecycle.isOverrideAutoApprove\n\nimport com.temenos.api.TBoolean;\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.templatehook.ErrorText;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\n\npublic class {{CLASS_NAME}} extends RecordLifecycle {\n\n    @Override\n    public TBoolean isOverrideAutoApprove(String application, String currentRecordId, TStructure currentRecord,\n            TransactionContext transactionContext, ErrorText errorText) {\n\n        return new TBoolean(\"{{OVERRIDE_ID}}\".equals(errorText.getId()));\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-record-lifecycle-override-auto-approve",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenOverride",
+     "APP": "FUNDS.TRANSFER",
+     "OVERRIDE_ID": "SAMPLE.OVERRIDE"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenOverride",
+      "APP": "FUNDS.TRANSFER",
+      "OVERRIDE_ID": "SAMPLE.OVERRIDE",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "FundsTransfer",
+      "APP_PACKAGE": "fundstransfer",
+      "RECORD_CLASS": "FundsTransfer",
+      "RECORD_PACKAGE": "fundstransfer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenOverride",
+      "APP": "FUNDS.TRANSFER",
+      "OVERRIDE_ID": "SAMPLE.OVERRIDE",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "FundsTransfer",
+      "APP_PACKAGE": "fundstransfer",
+      "RECORD_CLASS": "FundsTransfer",
+      "RECORD_PACKAGE": "fundstransfer"
+     }
+    },
+    "output": {
+     "GoldenOverride.java": "package com.temenos.t24.custom.golden;\n// Implements: RecordLifecycle from EB_TemplateHook.jar\n// T24 Application: FUNDS.TRANSFER\n// Hook type: RecordLifecycle.isOverrideAutoApprove\n\nimport com.temenos.api.TBoolean;\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.templatehook.ErrorText;\nimport com.temenos.t24.api.complex.eb.templatehook.TransactionContext;\nimport com.temenos.t24.api.hook.system.RecordLifecycle;\n\npublic class GoldenOverride extends RecordLifecycle {\n\n    @Override\n    public TBoolean isOverrideAutoApprove(String application, String currentRecordId, TStructure currentRecord,\n            TransactionContext transactionContext, ErrorText errorText) {\n\n        return new TBoolean(\"SAMPLE.OVERRIDE\".equals(errorText.getId()));\n    }\n}\n"
+    }
+   }
+  },
+  "java/service-lifecycle": {
+   "id": "java/service-lifecycle",
+   "language": "java",
+   "type": "service-lifecycle",
+   "label": "ServiceLifecycle (multi-thread service)",
+   "description": "TSA service: getIds selects the records to process; process handles one id per thread.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.service"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleService"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Selection field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "SELECT_VALUE",
+     "label": "Select records where the field equals",
+     "kind": "text",
+     "example": "PENDING"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: ServiceLifecycle from EB_ServiceHook.jar\n// T24 Application: {{APP}}\n// Hook type: ServiceLifecycle\n\nimport java.util.List;\n\nimport com.temenos.t24.api.complex.eb.servicehook.ServiceData;\nimport com.temenos.t24.api.hook.system.ServiceLifecycle;\nimport com.temenos.t24.api.records.{{RECORD_PACKAGE}}.{{RECORD_CLASS}}Record;\nimport com.temenos.t24.api.system.DataAccess;\n\npublic class {{CLASS_NAME}} extends ServiceLifecycle {\n\n    @Override\n    public List<String> getIds(ServiceData serviceData, List<String> controlList) {\n        DataAccess da = new DataAccess(this);\n        return da.selectRecords(\"\", \"{{APP}}\", \"\", \"WITH {{FIELD_NAME}} EQ '{{SELECT_VALUE}}'\");\n    }\n\n    @Override\n    public void process(String id, ServiceData serviceData, String controlItem) {\n        DataAccess da = new DataAccess(this);\n        {{RECORD_CLASS}}Record rec = new {{RECORD_CLASS}}Record(da.getRecord(\"{{APP}}\", id));\n        String value = rec.get{{FIELD}}().getValue();\n        if (!\"{{SELECT_VALUE}}\".equals(value)) {\n            return; // changed since getIds ran\n        }\n        // Process the record here; raise updates through updateRecord or postUpdateRequest.\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-service-lifecycle",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenService",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR",
+     "SELECT_VALUE": "1001"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenService",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "SELECT_VALUE": "1001",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenService",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "SELECT_VALUE": "1001",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GoldenService.java": "package com.temenos.t24.custom.golden;\n// Implements: ServiceLifecycle from EB_ServiceHook.jar\n// T24 Application: CUSTOMER\n// Hook type: ServiceLifecycle\n\nimport java.util.List;\n\nimport com.temenos.t24.api.complex.eb.servicehook.ServiceData;\nimport com.temenos.t24.api.hook.system.ServiceLifecycle;\nimport com.temenos.t24.api.records.customer.CustomerRecord;\nimport com.temenos.t24.api.system.DataAccess;\n\npublic class GoldenService extends ServiceLifecycle {\n\n    @Override\n    public List<String> getIds(ServiceData serviceData, List<String> controlList) {\n        DataAccess da = new DataAccess(this);\n        return da.selectRecords(\"\", \"CUSTOMER\", \"\", \"WITH SECTOR EQ '1001'\");\n    }\n\n    @Override\n    public void process(String id, ServiceData serviceData, String controlItem) {\n        DataAccess da = new DataAccess(this);\n        CustomerRecord rec = new CustomerRecord(da.getRecord(\"CUSTOMER\", id));\n        String value = rec.getSector().getValue();\n        if (!\"1001\".equals(value)) {\n            return; // changed since getIds ran\n        }\n        // Process the record here; raise updates through updateRecord or postUpdateRequest.\n    }\n}\n"
+    }
+   }
+  },
+  "java/enquiry-nofile": {
+   "id": "java/enquiry-nofile",
+   "language": "java",
+   "type": "enquiry-nofile",
+   "label": "Enquiry.setIds (NoFile enquiry)",
+   "description": "NOFILE enquiry: returns the ids of APP whose FIELD equals the enquiry selection value.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.enquiry"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleNofileEnquiry"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Selection field",
+     "kind": "field",
+     "of": "APP"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: Enquiry from EB_EnquiryHook.jar\n// T24 Application: {{APP}}\n// Hook type: Enquiry.setIds (NOFILE)\n\nimport java.util.ArrayList;\nimport java.util.List;\n\nimport com.temenos.t24.api.complex.eb.enquiryhook.EnquiryContext;\nimport com.temenos.t24.api.complex.eb.enquiryhook.FilterCriteria;\nimport com.temenos.t24.api.hook.system.Enquiry;\nimport com.temenos.t24.api.system.DataAccess;\n\npublic class {{CLASS_NAME}} extends Enquiry {\n\n    @Override\n    public List<String> setIds(List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {\n        String selectValue = \"\";\n        for (FilterCriteria criteria : filterCriteria) {\n            if (\"{{FIELD_NAME}}\".equals(criteria.getFieldname())) {\n                selectValue = criteria.getValue();\n            }\n        }\n        if (selectValue == null || selectValue.isEmpty()) {\n            return new ArrayList<>();\n        }\n        DataAccess da = new DataAccess(this);\n        return da.selectRecords(\"\", \"{{APP}}\", \"\", \"WITH {{FIELD_NAME}} EQ '\" + selectValue + \"'\");\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-enquiry-nofile",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenNofile",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenNofile",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenNofile",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GoldenNofile.java": "package com.temenos.t24.custom.golden;\n// Implements: Enquiry from EB_EnquiryHook.jar\n// T24 Application: CUSTOMER\n// Hook type: Enquiry.setIds (NOFILE)\n\nimport java.util.ArrayList;\nimport java.util.List;\n\nimport com.temenos.t24.api.complex.eb.enquiryhook.EnquiryContext;\nimport com.temenos.t24.api.complex.eb.enquiryhook.FilterCriteria;\nimport com.temenos.t24.api.hook.system.Enquiry;\nimport com.temenos.t24.api.system.DataAccess;\n\npublic class GoldenNofile extends Enquiry {\n\n    @Override\n    public List<String> setIds(List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {\n        String selectValue = \"\";\n        for (FilterCriteria criteria : filterCriteria) {\n            if (\"SECTOR\".equals(criteria.getFieldname())) {\n                selectValue = criteria.getValue();\n            }\n        }\n        if (selectValue == null || selectValue.isEmpty()) {\n            return new ArrayList<>();\n        }\n        DataAccess da = new DataAccess(this);\n        return da.selectRecords(\"\", \"CUSTOMER\", \"\", \"WITH SECTOR EQ '\" + selectValue + \"'\");\n    }\n}\n"
+    }
+   }
+  },
+  "java/enquiry-build": {
+   "id": "java/enquiry-build",
+   "language": "java",
+   "type": "enquiry-build",
+   "label": "Enquiry.setFilterCriteria (build routine)",
+   "description": "Enquiry BUILD.ROUTINE: adds a fixed selection criterion before the enquiry runs.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.enquiry"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleBuildRoutine"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "FIELD",
+     "label": "Field to filter on",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "FILTER_VALUE",
+     "label": "Value (EQ)",
+     "kind": "text",
+     "example": "1001"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: Enquiry from EB_EnquiryHook.jar\n// T24 Application: {{APP}}\n// Hook type: Enquiry.setFilterCriteria (BUILD.ROUTINE)\n\nimport java.util.List;\n\nimport com.temenos.t24.api.complex.eb.enquiryhook.EnquiryContext;\nimport com.temenos.t24.api.complex.eb.enquiryhook.FilterCriteria;\nimport com.temenos.t24.api.hook.system.Enquiry;\n\npublic class {{CLASS_NAME}} extends Enquiry {\n\n    @Override\n    public List<FilterCriteria> setFilterCriteria(List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {\n        FilterCriteria criteria = new FilterCriteria();\n        criteria.setFieldname(\"{{FIELD_NAME}}\");\n        criteria.setOperand(\"EQ\");\n        criteria.setValue(\"{{FILTER_VALUE}}\");\n        filterCriteria.add(criteria);\n        return filterCriteria;\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-enquiry-build",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenBuild",
+     "APP": "CUSTOMER",
+     "FIELD": "EB.CUS.SECTOR",
+     "FILTER_VALUE": "1001"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenBuild",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "FILTER_VALUE": "1001",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenBuild",
+      "APP": "CUSTOMER",
+      "FIELD": "Sector",
+      "FILTER_VALUE": "1001",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "SECTOR",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GoldenBuild.java": "package com.temenos.t24.custom.golden;\n// Implements: Enquiry from EB_EnquiryHook.jar\n// T24 Application: CUSTOMER\n// Hook type: Enquiry.setFilterCriteria (BUILD.ROUTINE)\n\nimport java.util.List;\n\nimport com.temenos.t24.api.complex.eb.enquiryhook.EnquiryContext;\nimport com.temenos.t24.api.complex.eb.enquiryhook.FilterCriteria;\nimport com.temenos.t24.api.hook.system.Enquiry;\n\npublic class GoldenBuild extends Enquiry {\n\n    @Override\n    public List<FilterCriteria> setFilterCriteria(List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {\n        FilterCriteria criteria = new FilterCriteria();\n        criteria.setFieldname(\"SECTOR\");\n        criteria.setOperand(\"EQ\");\n        criteria.setValue(\"1001\");\n        filterCriteria.add(criteria);\n        return filterCriteria;\n    }\n}\n"
+    }
+   }
+  },
+  "java/enquiry-conversion": {
+   "id": "java/enquiry-conversion",
+   "language": "java",
+   "type": "enquiry-conversion",
+   "label": "Enquiry.setValue (conversion routine)",
+   "description": "Enquiry CONVERSION hook: shows a text instead of an empty value. R25 signature: setValue(String value, String currentId, TStructure currentRecord, List<FilterCriteria>, EnquiryContext).",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.enquiry"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleConversion"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app"
+    },
+    {
+     "id": "EMPTY_TEXT",
+     "label": "Text to show for an empty value",
+     "kind": "text",
+     "example": "NOT SET"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: Enquiry from EB_EnquiryHook.jar\n// T24 Application: {{APP}}\n// Hook type: Enquiry.setValue (CONVERSION)\n\nimport java.util.List;\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.enquiryhook.EnquiryContext;\nimport com.temenos.t24.api.complex.eb.enquiryhook.FilterCriteria;\nimport com.temenos.t24.api.hook.system.Enquiry;\n\npublic class {{CLASS_NAME}} extends Enquiry {\n\n    @Override\n    public String setValue(String value, String currentId, TStructure currentRecord,\n            List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {\n\n        if (value == null || value.isEmpty()) {\n            return \"{{EMPTY_TEXT}}\";\n        }\n        return value;\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-enquiry-conversion",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenConversion",
+     "APP": "CUSTOMER",
+     "EMPTY_TEXT": "NOT SET"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenConversion",
+      "APP": "CUSTOMER",
+      "EMPTY_TEXT": "NOT SET",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenConversion",
+      "APP": "CUSTOMER",
+      "EMPTY_TEXT": "NOT SET",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "Customer",
+      "APP_PACKAGE": "customer",
+      "RECORD_CLASS": "Customer",
+      "RECORD_PACKAGE": "customer"
+     }
+    },
+    "output": {
+     "GoldenConversion.java": "package com.temenos.t24.custom.golden;\n// Implements: Enquiry from EB_EnquiryHook.jar\n// T24 Application: CUSTOMER\n// Hook type: Enquiry.setValue (CONVERSION)\n\nimport java.util.List;\n\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.eb.enquiryhook.EnquiryContext;\nimport com.temenos.t24.api.complex.eb.enquiryhook.FilterCriteria;\nimport com.temenos.t24.api.hook.system.Enquiry;\n\npublic class GoldenConversion extends Enquiry {\n\n    @Override\n    public String setValue(String value, String currentId, TStructure currentRecord,\n            List<FilterCriteria> filterCriteria, EnquiryContext enquiryContext) {\n\n        if (value == null || value.isEmpty()) {\n            return \"NOT SET\";\n        }\n        return value;\n    }\n}\n"
+    }
+   }
+  },
+  "java/activity-lifecycle-validate": {
+   "id": "java/activity-lifecycle-validate",
+   "language": "java",
+   "type": "activity-lifecycle-validate",
+   "label": "AA ActivityLifecycle.validateRecord",
+   "description": "AA activity validation hook: rejects the arrangement activity when one of its fields is empty. APP is always AA.ARRANGEMENT.ACTIVITY.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.aa"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleActivityCheck"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app",
+     "fixed": "AA.ARRANGEMENT.ACTIVITY"
+    },
+    {
+     "id": "FIELD",
+     "label": "Activity field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Error message",
+     "kind": "text",
+     "example": "FIELD IS MANDATORY"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: ActivityLifecycle from AA_ActivityHook.jar\n// T24 Application: {{APP}}\n// Hook type: ActivityLifecycle.validateRecord\n\nimport com.temenos.api.TStructure;\nimport com.temenos.api.TValidationResponse;\nimport com.temenos.t24.api.complex.aa.activityhook.ArrangementContext;\nimport com.temenos.t24.api.hook.arrangement.ActivityLifecycle;\nimport com.temenos.t24.api.records.aaaccountdetails.AaAccountDetailsRecord;\nimport com.temenos.t24.api.records.aaarrangement.AaArrangementRecord;\nimport com.temenos.t24.api.records.aaarrangementactivity.AaArrangementActivityRecord;\nimport com.temenos.t24.api.records.aaproductcatalog.AaProductCatalogRecord;\n\npublic class {{CLASS_NAME}} extends ActivityLifecycle {\n\n    @Override\n    public TValidationResponse validateRecord(AaAccountDetailsRecord accountDetailRecord,\n            AaArrangementActivityRecord arrangementActivityRecord, ArrangementContext arrangementContext,\n            AaArrangementRecord arrangementRecord, AaArrangementActivityRecord masterActivityRecord,\n            TStructure productPropertyRecord, AaProductCatalogRecord productRecord, TStructure record) {\n\n        String value = arrangementActivityRecord.get{{FIELD}}().getValue();\n        if (value == null || value.isEmpty()) {\n            arrangementActivityRecord.get{{FIELD}}().setError(\"{{ERROR_TEXT}}\");\n        }\n        return arrangementActivityRecord.getValidationResponse();\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-activity-lifecycle-validate",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenActivityCheck",
+     "APP": "AA.ARRANGEMENT.ACTIVITY",
+     "FIELD": "AA.ARR.ACT.EFFECTIVE.DATE",
+     "ERROR_TEXT": "EFFECTIVE DATE IS MANDATORY"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenActivityCheck",
+      "APP": "AA.ARRANGEMENT.ACTIVITY",
+      "FIELD": "EffectiveDate",
+      "ERROR_TEXT": "EFFECTIVE DATE IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "ACT.EFFECTIVE.DATE",
+      "APP_CLASS": "AaArrangementActivity",
+      "APP_PACKAGE": "aaarrangementactivity",
+      "RECORD_CLASS": "AaArrangementActivity",
+      "RECORD_PACKAGE": "aaarrangementactivity"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenActivityCheck",
+      "APP": "AA.ARRANGEMENT.ACTIVITY",
+      "FIELD": "EffectiveDate",
+      "ERROR_TEXT": "EFFECTIVE DATE IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "EFFECTIVE.DATE",
+      "APP_CLASS": "AaArrangementActivity",
+      "APP_PACKAGE": "aaarrangementactivity",
+      "RECORD_CLASS": "AaArrangementActivity",
+      "RECORD_PACKAGE": "aaarrangementactivity"
+     }
+    },
+    "output": {
+     "GoldenActivityCheck.java": "package com.temenos.t24.custom.golden;\n// Implements: ActivityLifecycle from AA_ActivityHook.jar\n// T24 Application: AA.ARRANGEMENT.ACTIVITY\n// Hook type: ActivityLifecycle.validateRecord\n\nimport com.temenos.api.TStructure;\nimport com.temenos.api.TValidationResponse;\nimport com.temenos.t24.api.complex.aa.activityhook.ArrangementContext;\nimport com.temenos.t24.api.hook.arrangement.ActivityLifecycle;\nimport com.temenos.t24.api.records.aaaccountdetails.AaAccountDetailsRecord;\nimport com.temenos.t24.api.records.aaarrangement.AaArrangementRecord;\nimport com.temenos.t24.api.records.aaarrangementactivity.AaArrangementActivityRecord;\nimport com.temenos.t24.api.records.aaproductcatalog.AaProductCatalogRecord;\n\npublic class GoldenActivityCheck extends ActivityLifecycle {\n\n    @Override\n    public TValidationResponse validateRecord(AaAccountDetailsRecord accountDetailRecord,\n            AaArrangementActivityRecord arrangementActivityRecord, ArrangementContext arrangementContext,\n            AaArrangementRecord arrangementRecord, AaArrangementActivityRecord masterActivityRecord,\n            TStructure productPropertyRecord, AaProductCatalogRecord productRecord, TStructure record) {\n\n        String value = arrangementActivityRecord.getEffectiveDate().getValue();\n        if (value == null || value.isEmpty()) {\n            arrangementActivityRecord.getEffectiveDate().setError(\"EFFECTIVE DATE IS MANDATORY\");\n        }\n        return arrangementActivityRecord.getValidationResponse();\n    }\n}\n"
+    }
+   }
+  },
+  "java/aa-calculation-charge": {
+   "id": "java/aa-calculation-charge",
+   "language": "java",
+   "type": "aa-calculation-charge",
+   "label": "AA Calculation.getChargeAmount",
+   "description": "AA charge calculation hook: returns a percentage of the base amount, never less than a minimum charge.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.aa"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleChargeCalc"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app",
+     "fixed": "AA.ARRANGEMENT.ACTIVITY"
+    },
+    {
+     "id": "RATE_PERCENT",
+     "label": "Charge rate (percent of base amount)",
+     "kind": "number",
+     "example": "1.5"
+    },
+    {
+     "id": "MIN_CHARGE",
+     "label": "Minimum charge",
+     "kind": "number",
+     "example": "10"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: Calculation from AA_CalculationHook.jar\n// T24 Application: {{APP}}\n// Hook type: Calculation.getChargeAmount\n\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\n\nimport com.temenos.api.TNumber;\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.aa.activityhook.ArrangementContext;\nimport com.temenos.t24.api.complex.aa.calculationhook.ChargeCalculationContext;\nimport com.temenos.t24.api.hook.arrangement.Calculation;\nimport com.temenos.t24.api.records.aaaccountdetails.AaAccountDetailsRecord;\nimport com.temenos.t24.api.records.aaarrangement.AaArrangementRecord;\nimport com.temenos.t24.api.records.aaarrangementactivity.AaArrangementActivityRecord;\nimport com.temenos.t24.api.records.aaprddescharge.AaPrdDesChargeRecord;\nimport com.temenos.t24.api.records.aaproductcatalog.AaProductCatalogRecord;\n\npublic class {{CLASS_NAME}} extends Calculation {\n\n    @Override\n    public TNumber getChargeAmount(String chargePropertyId, AaPrdDesChargeRecord chargePropertyRecord,\n            TNumber baseAmount, AaAccountDetailsRecord accountDetailRecord,\n            AaArrangementActivityRecord arrangementActivityRecord, ArrangementContext arrangementContext,\n            AaArrangementRecord arrangementRecord, TStructure productPropertyRecord,\n            AaProductCatalogRecord productRecord, TStructure record,\n            AaArrangementActivityRecord masterActivityRecord, ChargeCalculationContext chargeCalculationContext) {\n\n        BigDecimal base = new BigDecimal(baseAmount.toString().isEmpty() ? \"0\" : baseAmount.toString());\n        BigDecimal charge = base.multiply(new BigDecimal(\"{{RATE_PERCENT}}\"))\n                .divide(new BigDecimal(\"100\"), 2, RoundingMode.HALF_UP);\n        BigDecimal minimum = new BigDecimal(\"{{MIN_CHARGE}}\");\n        return new TNumber(charge.max(minimum).toPlainString());\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-aa-calculation-charge",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenChargeCalc",
+     "APP": "AA.ARRANGEMENT.ACTIVITY",
+     "RATE_PERCENT": "1.5",
+     "MIN_CHARGE": "10"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenChargeCalc",
+      "APP": "AA.ARRANGEMENT.ACTIVITY",
+      "RATE_PERCENT": "1.5",
+      "MIN_CHARGE": "10",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "AaArrangementActivity",
+      "APP_PACKAGE": "aaarrangementactivity",
+      "RECORD_CLASS": "AaArrangementActivity",
+      "RECORD_PACKAGE": "aaarrangementactivity"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenChargeCalc",
+      "APP": "AA.ARRANGEMENT.ACTIVITY",
+      "RATE_PERCENT": "1.5",
+      "MIN_CHARGE": "10",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "AaArrangementActivity",
+      "APP_PACKAGE": "aaarrangementactivity",
+      "RECORD_CLASS": "AaArrangementActivity",
+      "RECORD_PACKAGE": "aaarrangementactivity"
+     }
+    },
+    "output": {
+     "GoldenChargeCalc.java": "package com.temenos.t24.custom.golden;\n// Implements: Calculation from AA_CalculationHook.jar\n// T24 Application: AA.ARRANGEMENT.ACTIVITY\n// Hook type: Calculation.getChargeAmount\n\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\n\nimport com.temenos.api.TNumber;\nimport com.temenos.api.TStructure;\nimport com.temenos.t24.api.complex.aa.activityhook.ArrangementContext;\nimport com.temenos.t24.api.complex.aa.calculationhook.ChargeCalculationContext;\nimport com.temenos.t24.api.hook.arrangement.Calculation;\nimport com.temenos.t24.api.records.aaaccountdetails.AaAccountDetailsRecord;\nimport com.temenos.t24.api.records.aaarrangement.AaArrangementRecord;\nimport com.temenos.t24.api.records.aaarrangementactivity.AaArrangementActivityRecord;\nimport com.temenos.t24.api.records.aaprddescharge.AaPrdDesChargeRecord;\nimport com.temenos.t24.api.records.aaproductcatalog.AaProductCatalogRecord;\n\npublic class GoldenChargeCalc extends Calculation {\n\n    @Override\n    public TNumber getChargeAmount(String chargePropertyId, AaPrdDesChargeRecord chargePropertyRecord,\n            TNumber baseAmount, AaAccountDetailsRecord accountDetailRecord,\n            AaArrangementActivityRecord arrangementActivityRecord, ArrangementContext arrangementContext,\n            AaArrangementRecord arrangementRecord, TStructure productPropertyRecord,\n            AaProductCatalogRecord productRecord, TStructure record,\n            AaArrangementActivityRecord masterActivityRecord, ChargeCalculationContext chargeCalculationContext) {\n\n        BigDecimal base = new BigDecimal(baseAmount.toString().isEmpty() ? \"0\" : baseAmount.toString());\n        BigDecimal charge = base.multiply(new BigDecimal(\"1.5\"))\n                .divide(new BigDecimal(\"100\"), 2, RoundingMode.HALF_UP);\n        BigDecimal minimum = new BigDecimal(\"10\");\n        return new TNumber(charge.max(minimum).toPlainString());\n    }\n}\n"
+    }
+   }
+  },
+  "java/payment-lifecycle-validate-clearing": {
+   "id": "java/payment-lifecycle-validate-clearing",
+   "language": "java",
+   "type": "payment-lifecycle-validate-clearing",
+   "label": "PaymentLifecycle.validatePaymentForClearing",
+   "description": "Payments (TPH) clearing validation hook: rejects a payment with no credit party, returning an ISO reason code.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.payments"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SampleClearingCheck"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app",
+     "fixed": "POR.TRANSACTION"
+    },
+    {
+     "id": "ERROR_CODE",
+     "label": "ISO reason code",
+     "kind": "text",
+     "example": "AC01"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Message text",
+     "kind": "text",
+     "example": "CREDIT PARTY MISSING"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: PaymentLifecycle from PP_PaymentLifecycleHook.jar\n// T24 Application: {{APP}}\n// Hook type: PaymentLifecycle.validatePaymentForClearing\n\nimport java.util.List;\n\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.ClearingContext;\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.CreditParty;\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.DebitParty;\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.InputChannel;\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.ValidationResponse;\nimport com.temenos.t24.api.hook.payments.PaymentLifecycle;\n\npublic class {{CLASS_NAME}} extends PaymentLifecycle {\n\n    @Override\n    public ValidationResponse validatePaymentForClearing(InputChannel inputChannel, List<CreditParty> creditParties,\n            List<DebitParty> debitParties, ClearingContext clearingContext) {\n\n        ValidationResponse response = new ValidationResponse();\n        if (creditParties == null || creditParties.isEmpty()) {\n            response.setReturnCode(\"{{ERROR_CODE}}\");\n            response.setMessageText(\"{{ERROR_TEXT}}\");\n        }\n        return response;\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-payment-lifecycle-validate-clearing",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenClearingCheck",
+     "APP": "POR.TRANSACTION",
+     "ERROR_CODE": "AC01",
+     "ERROR_TEXT": "CREDIT PARTY MISSING"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenClearingCheck",
+      "APP": "POR.TRANSACTION",
+      "ERROR_CODE": "AC01",
+      "ERROR_TEXT": "CREDIT PARTY MISSING",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "PorTransaction",
+      "APP_PACKAGE": "portransaction",
+      "RECORD_CLASS": "PorTransaction",
+      "RECORD_PACKAGE": "portransaction"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenClearingCheck",
+      "APP": "POR.TRANSACTION",
+      "ERROR_CODE": "AC01",
+      "ERROR_TEXT": "CREDIT PARTY MISSING",
+      "TODAY": "2026-10-02",
+      "APP_CLASS": "PorTransaction",
+      "APP_PACKAGE": "portransaction",
+      "RECORD_CLASS": "PorTransaction",
+      "RECORD_PACKAGE": "portransaction"
+     }
+    },
+    "output": {
+     "GoldenClearingCheck.java": "package com.temenos.t24.custom.golden;\n// Implements: PaymentLifecycle from PP_PaymentLifecycleHook.jar\n// T24 Application: POR.TRANSACTION\n// Hook type: PaymentLifecycle.validatePaymentForClearing\n\nimport java.util.List;\n\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.ClearingContext;\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.CreditParty;\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.DebitParty;\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.InputChannel;\nimport com.temenos.t24.api.complex.pp.paymentlifecyclehook.ValidationResponse;\nimport com.temenos.t24.api.hook.payments.PaymentLifecycle;\n\npublic class GoldenClearingCheck extends PaymentLifecycle {\n\n    @Override\n    public ValidationResponse validatePaymentForClearing(InputChannel inputChannel, List<CreditParty> creditParties,\n            List<DebitParty> debitParties, ClearingContext clearingContext) {\n\n        ValidationResponse response = new ValidationResponse();\n        if (creditParties == null || creditParties.isEmpty()) {\n            response.setReturnCode(\"AC01\");\n            response.setMessageText(\"CREDIT PARTY MISSING\");\n        }\n        return response;\n    }\n}\n"
+    }
+   }
+  },
+  "java/payment-order-validate": {
+   "id": "java/payment-order-validate",
+   "language": "java",
+   "type": "payment-order-validate",
+   "label": "PaymentOrderLifecycle.validatePaymentOrderRecord",
+   "description": "PAYMENT.ORDER validation hook: rejects the order when one of its fields is empty. APP is always PAYMENT.ORDER.",
+   "inputs": [
+    {
+     "id": "JAVA_PACKAGE",
+     "label": "Java package",
+     "kind": "javaPackage",
+     "example": "com.samplebank.t24.payments"
+    },
+    {
+     "id": "CLASS_NAME",
+     "label": "Class name",
+     "kind": "className",
+     "example": "SamplePaymentOrderCheck"
+    },
+    {
+     "id": "APP",
+     "label": "Application",
+     "kind": "app",
+     "fixed": "PAYMENT.ORDER"
+    },
+    {
+     "id": "FIELD",
+     "label": "Payment order field",
+     "kind": "field",
+     "of": "APP"
+    },
+    {
+     "id": "ERROR_TEXT",
+     "label": "Error message",
+     "kind": "text",
+     "example": "FIELD IS MANDATORY"
+    }
+   ],
+   "files": {
+    "{{CLASS_NAME}}.java": "package {{JAVA_PACKAGE}};\n// Implements: PaymentOrderLifecycle from PI_PaymentOrderLifecycleHook.jar\n// T24 Application: {{APP}}\n// Hook type: PaymentOrderLifecycle.validatePaymentOrderRecord\n\nimport com.temenos.api.TValidationResponse;\nimport com.temenos.t24.api.complex.pi.paymentorderlifecyclehook.PaymentOrderValidationContext;\nimport com.temenos.t24.api.hook.payments.PaymentOrderLifecycle;\nimport com.temenos.t24.api.records.paymentorder.PaymentOrderRecord;\n\npublic class {{CLASS_NAME}} extends PaymentOrderLifecycle {\n\n    @Override\n    public TValidationResponse validatePaymentOrderRecord(String paymentOrderId, PaymentOrderRecord paymentOrderRecord,\n            PaymentOrderValidationContext paymentOrderValidationContext) {\n\n        String value = paymentOrderRecord.get{{FIELD}}().getValue();\n        if (value == null || value.isEmpty()) {\n            paymentOrderRecord.get{{FIELD}}().setError(\"{{ERROR_TEXT}}\");\n        }\n        return paymentOrderRecord.getValidationResponse();\n    }\n}\n"
+   },
+   "golden": {
+    "case": "java-payment-order-validate",
+    "userInputs": {
+     "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+     "CLASS_NAME": "GoldenPaymentOrderCheck",
+     "APP": "PAYMENT.ORDER",
+     "FIELD": "PO.DEBIT.ACCOUNT",
+     "ERROR_TEXT": "DEBIT ACCOUNT IS MANDATORY"
+    },
+    "today": "2026-10-02",
+    "resolved": {
+     "R23": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenPaymentOrderCheck",
+      "APP": "PAYMENT.ORDER",
+      "FIELD": "DebitAccount",
+      "ERROR_TEXT": "DEBIT ACCOUNT IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "DEBIT.ACCOUNT",
+      "APP_CLASS": "PaymentOrder",
+      "APP_PACKAGE": "paymentorder",
+      "RECORD_CLASS": "PaymentOrder",
+      "RECORD_PACKAGE": "paymentorder"
+     },
+     "R25": {
+      "JAVA_PACKAGE": "com.temenos.t24.custom.golden",
+      "CLASS_NAME": "GoldenPaymentOrderCheck",
+      "APP": "PAYMENT.ORDER",
+      "FIELD": "DebitAccount",
+      "ERROR_TEXT": "DEBIT ACCOUNT IS MANDATORY",
+      "TODAY": "2026-10-02",
+      "FIELD_NAME": "DEBIT.ACCOUNT",
+      "APP_CLASS": "PaymentOrder",
+      "APP_PACKAGE": "paymentorder",
+      "RECORD_CLASS": "PaymentOrder",
+      "RECORD_PACKAGE": "paymentorder"
+     }
+    },
+    "output": {
+     "GoldenPaymentOrderCheck.java": "package com.temenos.t24.custom.golden;\n// Implements: PaymentOrderLifecycle from PI_PaymentOrderLifecycleHook.jar\n// T24 Application: PAYMENT.ORDER\n// Hook type: PaymentOrderLifecycle.validatePaymentOrderRecord\n\nimport com.temenos.api.TValidationResponse;\nimport com.temenos.t24.api.complex.pi.paymentorderlifecyclehook.PaymentOrderValidationContext;\nimport com.temenos.t24.api.hook.payments.PaymentOrderLifecycle;\nimport com.temenos.t24.api.records.paymentorder.PaymentOrderRecord;\n\npublic class GoldenPaymentOrderCheck extends PaymentOrderLifecycle {\n\n    @Override\n    public TValidationResponse validatePaymentOrderRecord(String paymentOrderId, PaymentOrderRecord paymentOrderRecord,\n            PaymentOrderValidationContext paymentOrderValidationContext) {\n\n        String value = paymentOrderRecord.getDebitAccount().getValue();\n        if (value == null || value.isEmpty()) {\n            paymentOrderRecord.getDebitAccount().setError(\"DEBIT ACCOUNT IS MANDATORY\");\n        }\n        return paymentOrderRecord.getValidationResponse();\n    }\n}\n"
+    }
+   }
+  }
+ }
+}

@@ -5,3 +5,6 @@ test-results/
 package-lock.json
 # The embedded OFS Generator and T24 Log Analyzer are maintained as self-contained pages.
 public/tools/
+
+# Knowledge files exported by Temenos-Skills (minified JSON, not formatted)
+docs/t24tools/

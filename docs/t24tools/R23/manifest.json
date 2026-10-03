@@ -1,0 +1,17 @@
+{
+  "release": "R23",
+  "schemaVersion": 3,
+  "generated": "2026-10-02T22:25:49Z",
+  "apps": 4596,
+  "fields": 162842,
+  "files": {
+    "fields.json": {
+      "bytes": 18264070,
+      "sha256": "8a1b4963ae24a25eef00a9928e346dcb8aff4268b77cae6e265715df60541b8f"
+    },
+    "descriptions.json": {
+      "bytes": 10612260,
+      "sha256": "7d66a3482a9ac7efe885f1f61a545583892a1c107c054533b5f1427f3dda304a"
+    }
+  }
+}
