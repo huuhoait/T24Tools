@@ -68,6 +68,21 @@ test.describe('Artefact Generator', () => {
     await expect(output).toContainText('rec.getName().getValue()');
   });
 
+  test('changing the application clears the field chosen for the previous one', async ({
+    page,
+  }) => {
+    await page.goto('./?tool=artefact');
+    await loadKnowledge(page);
+    await page.getByRole('radio', { name: /Infobasic/ }).check();
+    await page.getByRole('radio', { name: 'Input routine (VIR)' }).check();
+    await page.getByLabel('Application').fill('SAMPLE.CUSTOMER');
+    const field = page.getByLabel('Field', { exact: true });
+    await field.selectOption('SC.NAME');
+    await page.getByLabel('Application').fill('SAMPLE.CUSTOMERX');
+    await page.getByLabel('Application').fill('SAMPLE.CUSTOMER');
+    await expect(field).toHaveValue('');
+  });
+
   test('the loaded release is remembered after a reload', async ({ page }) => {
     await page.goto('./?tool=artefact');
     await loadKnowledge(page);

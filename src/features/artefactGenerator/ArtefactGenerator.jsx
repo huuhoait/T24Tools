@@ -322,7 +322,13 @@ export function ArtefactGenerator() {
                     spec={spec}
                     value={inputs[spec.id]}
                     knowledge={knowledge}
-                    onChange={(v) => setInputs({ ...inputs, [spec.id]: v })}
+                    onChange={(v) => {
+                      // A field chosen for the previous application is not valid for this one.
+                      const next = { ...inputs, [spec.id]: v };
+                      for (const f of template.inputs)
+                        if (f.kind === 'field' && f.of === spec.id) delete next[f.id];
+                      setInputs(next);
+                    }}
                   />
                 ) : spec.kind === 'field' ? (
                   <FieldInput
