@@ -3,13 +3,14 @@
 Temenos T24 / Transact developer tools that run entirely in your browser. Nothing you open, paste
 or generate is uploaded anywhere.
 
-| Tool                      | What it does                                                                                                                                                                                                                                    |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Routine Creator**       | Generates legacy T24/Infobasic routines (tables, verified field positions, F.READ/F.WRITE and other snippets, legacy templates, EVAL queries). **Open existing routine** reads a `.b` file back into the creator or copies it under a new name. |
-| **OFS Message Generator** | Builds, parses and inspects OFS messages using the five-part message structure. Configurations are saved in this browser.                                                                                                                       |
-| **T24 Log Analyzer**      | Reads up to three T24/TAFJ log files (or pasted content), filters entries, shows OFS and XML details, and sends an entry's OFS message to the OFS Message Generator.                                                                            |
+| Tool                      | What it does                                                                                                                                                                                                                                                                                                                       |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Routine Creator**       | Generates legacy T24/Infobasic routines (tables, verified field positions, F.READ/F.WRITE and other snippets, legacy templates, EVAL queries). **Open existing routine** reads a `.b` file back into the creator or copies it under a new name.                                                                                    |
+| **Artefact Generator**    | Generates T24 routines and L3 Java hooks in 25 types (Infobasic, jBC, Java). You choose the release, the language and the type, then fill in the inputs. Field names come from a knowledge file you load from your own Temenos-Skills; it stays in this browser. Every template's example compiles against a real T24 R25 install. |
+| **OFS Message Generator** | Builds, parses and inspects OFS messages using the five-part message structure. Configurations are saved in this browser.                                                                                                                                                                                                          |
+| **T24 Log Analyzer**      | Reads up to three T24/TAFJ log files (or pasted content), filters entries, shows OFS and XML details, and sends an entry's OFS message to the OFS Message Generator.                                                                                                                                                               |
 
-The three tools moved here from [RepoMind](https://github.com/zainknoman/RepoMind), which now
+The Routine Creator, OFS Message Generator and T24 Log Analyzer moved here from [RepoMind](https://github.com/zainknoman/RepoMind), which now
 focuses on codebase intelligence (including analysis of T24 source code). See
 [CHANGELOG.md](CHANGELOG.md) for the origin of each tool.
 
@@ -29,11 +30,15 @@ focuses on codebase intelligence (including analysis of T24 source code). See
 - **T24 Log Analyzer → entry → 📨 Open in OFS Generator** switches to the OFS Message Generator
   with the application, version, function, transaction id, company and fields filled in.
   Authentication fields are left blank on purpose.
-- `?tool=routine`, `?tool=ofs` and `?tool=log` open a tool directly.
+- `?tool=routine`, `?tool=artefact`, `?tool=ofs` and `?tool=log` open a tool directly.
+- **Artefact Generator**: load a release's `fields.json` with **Load knowledge file…**, then
+  choose the language, the routine type and the inputs. See
+  [docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md).
 - Settings saved by RepoMind's OFS tools (and RepoMind's theme) are carried over once on the first
   visit, because both apps are served from the same GitHub Pages origin.
 
-More detail: [docs/ROUTINE_CREATOR.md](docs/ROUTINE_CREATOR.md) and [docs/TOOLS.md](docs/TOOLS.md).
+More detail: [docs/ROUTINE_CREATOR.md](docs/ROUTINE_CREATOR.md),
+[docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md) and [docs/TOOLS.md](docs/TOOLS.md).
 
 ## Development
 
@@ -63,3 +68,9 @@ the app. They reach storage through `public/tools/t24tools-bridge.js`, and the a
 two keys (`t24tools.ofs.config`, `t24tools.t24.ofsContext`) and one action (open the OFS
 Generator). The production build carries a Content Security Policy that allows no network
 connections beyond this site.
+
+## Disclaimer
+
+T24Tools is an independent project. It is not affiliated with or endorsed by Temenos. Temenos,
+T24 and Transact are trademarks of Temenos AG. T24Tools contains no Temenos data: field data is
+loaded by each user from their own knowledge file and never leaves their browser.

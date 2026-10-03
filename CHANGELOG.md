@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.1.0 — 2026-10-03
+
+### Added
+
+- **Artefact Generator** (`?tool=artefact`): choose release → language → routine type → inputs and
+  generate T24 source. 25 types: Infobasic VVR / VIR / VAR / NoFile / OFS routine, jBC validation /
+  GET / WRITE / NoFile, and 16 L3 Java hooks (RecordLifecycle, ServiceLifecycle, Enquiry, AA
+  ActivityLifecycle and Calculation, PaymentLifecycle, PaymentOrderLifecycle). Every template's
+  example compiles against a real R25 install.
+- Knowledge files: a per-release `fields.json` exported by Temenos-Skills, loaded from disk and
+  kept only in this browser (IndexedDB). It provides field names, positions, jBC names and the
+  single/multi-value flag. Java only offers single-value fields; jBC only offers fields that have
+  a componentised name.
+- Field check of the generated Infobasic / jBC source against the selected release.
+- Footer and README disclaimer: not affiliated with or endorsed by Temenos.
+
 ## 1.0.0 — 2026-10-01
 
 First release. The three T24 tools moved here from
