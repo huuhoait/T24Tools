@@ -12,6 +12,10 @@
   table with position, property, type, mandatory, jBC name and value kind).
 - JSON Viewer **Upload file**: drop or choose one or more `.json` files, switch between them or
   remove one from the list. Only the open file is parsed and held in memory.
+- Artefact Generator: field inputs are a filterable list instead of a drop-down. Where a template
+  supports it, tick several fields (or **Select all** / **Select shown**) and the field-specific
+  code is repeated for each; one field still renders the compile-verified template unchanged.
+  See [docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md#several-fields).
 
 ## 1.1.0 — 2026-10-03
 

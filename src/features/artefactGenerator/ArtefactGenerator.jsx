@@ -5,7 +5,8 @@ import { toast } from '../../lib/toast';
 import { fieldsFor, listApps } from './catalog';
 import { checkFields } from './fieldCheck';
 import { createKnowledgeStore } from './knowledgeStore';
-import { localIsoDate, render, resolve } from './render';
+import { fieldList, generateFiles, isMultiField } from './multiField';
+import { localIsoDate } from './render';
 
 const store = createKnowledgeStore();
 
@@ -73,25 +74,92 @@ function AppInput({ spec, value, knowledge, onChange }) {
   );
 }
 
-function FieldInput({ spec, app, value, knowledge, language, onChange }) {
+/**
+ * Field list for one field input: a filterable list of the app's fields with checkboxes (several
+ * fields, Select all / Clear) or single choice, where the template needs exactly one field.
+ */
+function FieldPicker({ spec, app, value, knowledge, language, multiple, onChange }) {
   const fields = useMemo(() => fieldsFor(knowledge, app, language), [knowledge, app, language]);
+  const [filter, setFilter] = useState('');
+  const selected = useMemo(() => new Set(fieldList(value)), [value]);
   if (!app) return <p className="muted">Choose the application first.</p>;
   if (!fields.length) return <p className="muted">{app} is not in this release.</p>;
+
+  const q = filter.trim().toUpperCase();
+  const shown = q
+    ? fields.filter(
+        (f) => f.name.includes(q) || String(f.position) === q || f.code.toUpperCase().includes(q),
+      )
+    : fields;
+  const enabled = fields.filter((f) => !f.disabled);
+  const shownEnabled = shown.filter((f) => !f.disabled);
+  // Selections keep the application's field order, whatever order they were ticked in.
+  const choose = (keep) => onChange(enabled.filter((f) => keep(f.name)).map((f) => f.name));
+  const toggle = (name) =>
+    multiple ? choose((n) => (n === name ? !selected.has(n) : selected.has(n))) : onChange(name);
+  const shownNames = new Set(shownEnabled.map((f) => f.name));
+
   return (
-    <select aria-label={spec.label} value={value || ''} onChange={(e) => onChange(e.target.value)}>
-      <option value="">Choose a field…</option>
-      {fields.map((f) => (
-        <option key={f.name} value={f.name} disabled={Boolean(f.disabled)}>
-          {f.position} · {f.name}
-          {f.kind ? ` [${f.kind}]` : ''}
-          {f.disabled
-            ? ` — ${f.disabled}`
-            : language !== 'infobasic' && f.code
-              ? ` → ${f.code}`
-              : ''}
-        </option>
-      ))}
-    </select>
+    <div className="field-picker" role="group" aria-label={spec.label}>
+      <div className="field-picker-bar">
+        <input
+          type="search"
+          aria-label={`Filter ${spec.label}`}
+          value={filter}
+          placeholder="Filter by name, position or code"
+          onChange={(e) => setFilter(e.target.value)}
+        />
+        {multiple && (
+          <>
+            <button
+              type="button"
+              disabled={!shownEnabled.length}
+              onClick={() => choose((n) => selected.has(n) || shownNames.has(n))}
+            >
+              {q ? `Select shown (${shownEnabled.length})` : `Select all (${enabled.length})`}
+            </button>
+            <button type="button" disabled={!selected.size} onClick={() => onChange([])}>
+              Clear
+            </button>
+          </>
+        )}
+        <small className="muted" aria-live="polite">
+          {multiple
+            ? `${selected.size} of ${enabled.length} selected`
+            : selected.size
+              ? `Selected: ${[...selected][0]}`
+              : 'Choose one field'}
+        </small>
+      </div>
+      <ul className="field-picker-list">
+        {shown.map((f) => (
+          <li key={`${f.position}-${f.name}`}>
+            <label
+              className={`field-picker-item${selected.has(f.name) ? ' on' : ''}${f.disabled ? ' disabled' : ''}`}
+              title={f.disabled || undefined}
+            >
+              <input
+                type={multiple ? 'checkbox' : 'radio'}
+                name={`field-${spec.id}`}
+                value={f.name}
+                checked={selected.has(f.name)}
+                disabled={Boolean(f.disabled)}
+                onChange={() => toggle(f.name)}
+              />
+              <span className="field-picker-pos">{f.position}</span>
+              <span className="field-picker-name">{f.name}</span>
+              {f.kind && <span className="artefact-badge">{f.kind}</span>}
+              <span className="field-picker-note">
+                {f.disabled ? f.disabled : language !== 'infobasic' && f.code ? `→ ${f.code}` : ''}
+              </span>
+            </label>
+          </li>
+        ))}
+        {!shown.length && (
+          <li className="muted field-picker-empty">No field matches “{filter}”.</li>
+        )}
+      </ul>
+    </div>
   );
 }
 
@@ -170,11 +238,12 @@ export function ArtefactGenerator() {
     setError('');
     try {
       const empty = template.inputs
-        .filter((i) => !String(inputs[i.id] ?? '').trim())
+        .filter((i) =>
+          i.kind === 'field' ? !fieldList(inputs[i.id]).length : !String(inputs[i.id] ?? '').trim(),
+        )
         .map((i) => i.label);
       if (empty.length) throw new Error(`Fill in: ${empty.join(', ')}`);
-      const values = resolve(template, inputs, knowledge, localIsoDate());
-      const files = render(template, values);
+      const files = generateFiles(template, inputs, knowledge, localIsoDate());
       const apps = template.inputs
         .filter((i) => i.kind === 'app')
         .map((i) => String(inputs[i.id]).toUpperCase());
@@ -314,41 +383,52 @@ export function ArtefactGenerator() {
       {template && (
         <Step n={4} title="Inputs" hint="Field lists are filtered for the release and language.">
           <div className="routine-form-grid artefact-inputs">
-            {template.inputs.map((spec) => (
-              <label key={spec.id}>
-                <span>{spec.label}</span>
-                {spec.kind === 'app' ? (
-                  <AppInput
-                    spec={spec}
-                    value={inputs[spec.id]}
-                    knowledge={knowledge}
-                    onChange={(v) => {
-                      // A field chosen for the previous application is not valid for this one.
-                      const next = { ...inputs, [spec.id]: v };
-                      for (const f of template.inputs)
-                        if (f.kind === 'field' && f.of === spec.id) delete next[f.id];
-                      setInputs(next);
-                    }}
-                  />
-                ) : spec.kind === 'field' ? (
-                  <FieldInput
+            {template.inputs.map((spec) =>
+              spec.kind === 'field' ? (
+                <div key={spec.id} className="wide artefact-field">
+                  <span>
+                    {spec.label}
+                    {isMultiField(template.id, spec.id) && (
+                      <small className="muted"> — one or more</small>
+                    )}
+                  </span>
+                  <FieldPicker
                     spec={spec}
                     app={String(inputs[spec.of] || '').toUpperCase()}
                     value={inputs[spec.id]}
                     knowledge={knowledge}
                     language={language}
+                    multiple={isMultiField(template.id, spec.id)}
                     onChange={(v) => setInputs({ ...inputs, [spec.id]: v })}
                   />
-                ) : (
-                  <input
-                    aria-label={spec.label}
-                    value={inputs[spec.id] || ''}
-                    placeholder={spec.example || ''}
-                    onChange={(e) => setInputs({ ...inputs, [spec.id]: e.target.value })}
-                  />
-                )}
-              </label>
-            ))}
+                </div>
+              ) : (
+                <label key={spec.id}>
+                  <span>{spec.label}</span>
+                  {spec.kind === 'app' ? (
+                    <AppInput
+                      spec={spec}
+                      value={inputs[spec.id]}
+                      knowledge={knowledge}
+                      onChange={(v) => {
+                        // A field chosen for the previous application is not valid for this one.
+                        const next = { ...inputs, [spec.id]: v };
+                        for (const f of template.inputs)
+                          if (f.kind === 'field' && f.of === spec.id) delete next[f.id];
+                        setInputs(next);
+                      }}
+                    />
+                  ) : (
+                    <input
+                      aria-label={spec.label}
+                      value={inputs[spec.id] || ''}
+                      placeholder={spec.example || ''}
+                      onChange={(e) => setInputs({ ...inputs, [spec.id]: e.target.value })}
+                    />
+                  )}
+                </label>
+              ),
+            )}
           </div>
           <div className="routine-creator-actions">
             <button type="button" className="primary" onClick={generate}>

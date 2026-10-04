@@ -1305,3 +1305,100 @@ textarea {
   color: var(--text);
   background: var(--track);
 }
+
+.artefact-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+.field-picker {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  font-weight: 400;
+}
+.field-picker-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.field-picker-bar input {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.field-picker-bar button {
+  padding: 6px 10px;
+}
+.field-picker-bar small {
+  margin-left: auto;
+  font-size: 12px;
+}
+.field-picker-list {
+  max-height: 280px;
+  overflow: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+}
+.artefact-inputs .field-picker-item,
+.field-picker-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-weight: 400;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font:
+    12.5px/1.4 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.field-picker-item:hover {
+  background: var(--track);
+}
+.field-picker-item.on {
+  background: var(--tint-accent);
+  color: var(--accent-text);
+}
+.field-picker-item.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.artefact-inputs .field-picker-item input {
+  flex: none;
+  width: auto;
+  margin: 0;
+}
+.field-picker-pos {
+  min-width: 3ch;
+  color: var(--muted);
+  text-align: right;
+}
+.field-picker-name {
+  font-weight: 700;
+}
+.field-picker-note {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.field-picker-empty {
+  padding: 8px;
+}

@@ -9,9 +9,12 @@ real T24 install. Open it from the header or with `?tool=artefact`.
 2. **Language**: Infobasic (legacy), jBC (componentised) or Java (L3 hooks).
 3. **Routine type**: 25 types, listed below. A type that has no compile-verified template is shown
    disabled as _coming soon_.
-4. **Inputs**: built from the template. Applications are searched in the selected release. The
-   field picker shows each field's position, whether it is single-value (`SV`) or multi-value
-   (`MV`, `MV-GROUP`), and what the generated code will contain.
+4. **Inputs**: built from the template. Applications are searched in the selected release. Each
+   field input is a filterable list of the application's fields, showing the position, whether
+   the field is single-value (`SV`) or multi-value (`MV`, `MV-GROUP`), and what the generated code
+   will contain. Fields the language cannot use are listed but disabled, with the reason. Inputs
+   marked _one or more_ have checkboxes with **Select all** (or **Select shown** while filtering)
+   and **Clear**; the others take exactly one field. See [Several fields](#several-fields).
 5. **Generate**: one tab per file (a jBC or Infobasic routine also gets its `.component`), with
    **Copy** and **Download**. For Infobasic and jBC, the generated source is checked again, and
    every field name in it must exist in the selected release.
@@ -42,6 +45,28 @@ Field names, positions, jBC names and the single/multi-value flag come from a **
 Componentised names differ between releases (for example, R25 keeps the application prefix in many
 local modules where R23 did not), so always generate for the release you will deploy to.
 Generation never leaves a `{{PLACEHOLDER}}` in the output: missing inputs are listed instead.
+
+## Several fields
+
+With one field ticked, the output is exactly the compile-verified template. With more, only the
+field-specific statements are repeated inside the same routine or class:
+
+| Type                                                                   | With several fields                                                                            |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Infobasic VVR                                                          | runs the check when `AF` is any of the fields                                                  |
+| Infobasic VIR, jBC validation                                          | checks each field in turn (jBC stops at the first empty one)                                   |
+| Infobasic VAR                                                          | the linked record must have every selected field set (the id field stays single)               |
+| Infobasic / jBC NoFile, Java `Enquiry.setIds`                          | each selection field that the user filled becomes an `AND` condition; none filled returns none |
+| Infobasic OFS routine, jBC WRITE                                       | one OFS message sets every field to the value                                                  |
+| jBC GET                                                                | returns one value per field, field-mark separated, in field order                              |
+| Java `defaultFieldValues`                                              | defaults each empty field                                                                      |
+| Java `defaultFieldValuesOnHotField`                                    | fires on any of the hot fields and sets every target field                                     |
+| Java `validateRecord`, AA `ActivityLifecycle`, `PaymentOrderLifecycle` | flags each empty field with the error                                                          |
+| Java `updateRecord` / `postUpdateRequest`                              | sets every target field (the field holding the target id stays single)                         |
+
+`validateField`, `ServiceLifecycle` and `Enquiry.setFilterCriteria` take one field. The multi-field
+forms are built from the proven templates (`src/features/artefactGenerator/multiField.js`) but have
+not been compiled on a T24 install yet, so compile them before deploying.
 
 ## Routine types
 

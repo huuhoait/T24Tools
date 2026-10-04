@@ -25,7 +25,10 @@ test.describe('Artefact Generator', () => {
     await page.getByLabel('Description').fill('Reject an empty name');
     await page.getByLabel('Author').fill('tester');
     await page.getByLabel('Application').fill('SAMPLE.CUSTOMER');
-    await page.getByLabel('Field', { exact: true }).selectOption('SC.NAME');
+    await page
+      .getByRole('group', { name: 'Field', exact: true })
+      .getByRole('checkbox', { name: /SC\.NAME/ })
+      .check();
     await page.getByLabel('Error message').fill('NAME IS MANDATORY');
     await page.getByRole('button', { name: 'Generate' }).click();
 
@@ -53,10 +56,11 @@ test.describe('Artefact Generator', () => {
     await page.getByRole('radio', { name: /Java/ }).check();
     await page.getByRole('radio', { name: 'RecordLifecycle.validateRecord' }).check();
     await page.getByLabel('Application').fill('SAMPLE.CUSTOMER');
-    const field = page.getByLabel('Field', { exact: true });
-    await expect(field.locator('option[value="SC.LINES"]')).toHaveAttribute('disabled', '');
-    await expect(field.locator('option[value="SC.LINES"]')).toContainText('multi-value (MV)');
-    await field.selectOption('SC.NAME');
+    const field = page.getByRole('group', { name: 'Field', exact: true });
+    await expect(field.getByRole('checkbox', { name: /SC\.LINES/ })).toBeDisabled();
+    await expect(field.getByText('multi-value (MV)')).toBeVisible();
+    await expect(field.getByRole('button', { name: 'Select all (1)' })).toBeVisible();
+    await field.getByRole('checkbox', { name: /SC\.NAME/ }).check();
     await page.getByLabel('Java package').fill('com.sample.hook');
     await page.getByLabel('Class name').fill('SampleGuard');
     await page.getByLabel('Error message').fill('NAME IS MANDATORY');
@@ -76,11 +80,48 @@ test.describe('Artefact Generator', () => {
     await page.getByRole('radio', { name: /Infobasic/ }).check();
     await page.getByRole('radio', { name: 'Input routine (VIR)' }).check();
     await page.getByLabel('Application').fill('SAMPLE.CUSTOMER');
-    const field = page.getByLabel('Field', { exact: true });
-    await field.selectOption('SC.NAME');
+    const field = page.getByRole('group', { name: 'Field', exact: true });
+    await field.getByRole('checkbox', { name: /SC\.NAME/ }).check();
+    await expect(field.getByText('1 of 2 selected')).toBeVisible();
     await page.getByLabel('Application').fill('SAMPLE.CUSTOMERX');
     await page.getByLabel('Application').fill('SAMPLE.CUSTOMER');
-    await expect(field).toHaveValue('');
+    await expect(field.getByRole('checkbox', { name: /SC\.NAME/ })).not.toBeChecked();
+    await expect(field.getByText('0 of 2 selected')).toBeVisible();
+  });
+
+  test('Select all generates one check per field; single-field inputs offer one choice', async ({
+    page,
+  }) => {
+    await page.goto('./?tool=artefact');
+    await loadKnowledge(page);
+    await page.getByRole('radio', { name: /Infobasic/ }).check();
+    await page.getByRole('radio', { name: 'Input routine (VIR)' }).check();
+    await page.getByLabel('Package').fill('SAMPLE.Legacy');
+    await page.getByLabel('Component method').fill('sampleInput');
+    await page.getByLabel('Routine name').fill('V.SAMPLE.INPUT');
+    await page.getByLabel('Description').fill('Both fields are mandatory');
+    await page.getByRole('textbox', { name: 'Author' }).fill('tester');
+    await page.getByLabel('Application').fill('SAMPLE.CUSTOMER');
+    const field = page.getByRole('group', { name: 'Field', exact: true });
+    await field.getByLabel('Filter Field').fill('LINES');
+    await expect(field.getByRole('checkbox')).toHaveCount(1);
+    await field.getByLabel('Filter Field').fill('');
+    await field.getByRole('button', { name: 'Select all (2)' }).click();
+    await expect(field.getByText('2 of 2 selected')).toBeVisible();
+    await page.getByLabel('Error message').fill('FIELD IS MANDATORY');
+    await page.getByRole('button', { name: 'Generate' }).click();
+    const output = page.getByLabel('Generated V.SAMPLE.INPUT.b');
+    await expect(output).toContainText('Y.VALUE = R.NEW(SC.NAME)');
+    await expect(output).toContainText('Y.VALUE = R.NEW(SC.LINES)');
+    await expect(page.locator('main').getByRole('status').last()).toContainText(
+      '2 field reference(s) verified',
+    );
+
+    await page.getByRole('radio', { name: 'Authorisation routine (VAR)' }).check();
+    await page.getByLabel('Application', { exact: true }).fill('SAMPLE.CUSTOMER');
+    const idField = page.getByRole('group', { name: 'Field holding the linked record id' });
+    await expect(idField.getByRole('radio')).toHaveCount(2);
+    await expect(idField.getByRole('button', { name: /Select all/ })).toHaveCount(0);
   });
 
   test('the loaded release is remembered after a reload', async ({ page }) => {
