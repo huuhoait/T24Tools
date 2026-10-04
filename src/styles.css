@@ -874,3 +874,434 @@ textarea {
 .artefact-description {
   margin-top: 10px;
 }
+
+/* JSON Viewer */
+.json-viewer {
+  --json-key: #7c3aed;
+  --json-str: #047857;
+  --json-num: #b45309;
+  --json-lit: #be185d;
+}
+:root[data-theme='dark'] .json-viewer {
+  --json-key: #c4b5fd;
+  --json-str: #6ee7b7;
+  --json-num: #fcd34d;
+  --json-lit: #f9a8d4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .json-viewer {
+    --json-key: #c4b5fd;
+    --json-str: #6ee7b7;
+    --json-num: #fcd34d;
+    --json-lit: #f9a8d4;
+  }
+}
+.json-viewer .routine-card {
+  margin-bottom: 16px;
+}
+.json-input {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  padding: 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    13px/1.5 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.json-source-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+.json-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 13px;
+  color: var(--muted);
+  min-width: 0;
+}
+.json-meta b {
+  color: var(--text);
+}
+.json-busy {
+  color: var(--accent-text);
+  font-weight: 700;
+}
+.json-tag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--tint-accent);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+.json-viewer .routine-validation.invalid {
+  margin: 12px 0 0;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 13px;
+}
+.json-output .tabs {
+  margin-top: 0;
+}
+.json-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.json-search {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 320px;
+}
+.json-search input,
+.json-apps-list input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.json-results {
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+.json-results-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.json-results-head .link {
+  margin-left: auto;
+  padding: 4px 10px;
+}
+.json-results ol {
+  max-height: 220px;
+  overflow: auto;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+.json-results li button,
+.json-apps-list li button {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  padding: 4px 12px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.json-results li button:hover,
+.json-apps-list li button:hover,
+.json-apps-list li button.on {
+  background: var(--tint-accent);
+}
+.json-scroll {
+  height: min(68vh, 760px);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  font:
+    13px/22px ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  contain: strict;
+}
+.json-spacer {
+  position: relative;
+  min-width: 100%;
+  width: max-content;
+}
+.json-window {
+  will-change: transform;
+}
+.json-row {
+  display: flex;
+  white-space: pre;
+  cursor: default;
+}
+.json-row:hover {
+  background: var(--track);
+}
+.json-row.selected {
+  background: var(--tint-accent);
+}
+.json-line {
+  position: sticky;
+  left: 0;
+  flex: none;
+  width: 64px;
+  padding-right: 12px;
+  border-right: 1px solid var(--border);
+  background-color: var(--bg);
+  color: var(--muted);
+  text-align: right;
+  user-select: none;
+}
+.json-row.selected .json-line {
+  background-color: var(--tint-accent);
+}
+.json-code {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding-right: 24px;
+}
+.json-toggle,
+.json-toggle-space {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+}
+.json-toggle {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1;
+}
+.json-toggle:hover {
+  background: var(--border);
+  color: var(--text);
+}
+.json-key {
+  color: var(--json-key);
+}
+.json-str {
+  color: var(--json-str);
+}
+.json-num {
+  color: var(--json-num);
+}
+.json-bool,
+.json-null {
+  color: var(--json-lit);
+  font-weight: 600;
+}
+.json-punct {
+  color: var(--muted);
+}
+.json-ellipsis {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--track);
+  color: var(--muted);
+}
+.json-count {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 12px;
+}
+.json-statusbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.json-statusbar code {
+  max-width: min(60ch, 100%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+.json-statusbar button {
+  padding: 4px 10px;
+}
+.json-apps {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.json-apps-list {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.json-apps-list ul {
+  max-height: 46vh;
+  overflow: auto;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.json-app-detail {
+  min-width: 0;
+}
+.json-app-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+}
+.json-app-head h2 {
+  margin: 0 0 4px;
+  font:
+    700 17px ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.json-app-head p {
+  margin: 0 0 12px;
+}
+.json-table-wrap {
+  max-height: 68vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.json-table {
+  width: 100%;
+  border-collapse: collapse;
+  font:
+    12.5px/1.45 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.json-table th {
+  position: sticky;
+  top: 0;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border-strong);
+  background: var(--surface);
+  font-family: Inter, system-ui, sans-serif;
+  text-align: left;
+  white-space: nowrap;
+}
+.json-table td {
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.json-table tr.on td {
+  background: var(--tint-warn);
+  font-weight: 700;
+}
+@media (max-width: 760px) {
+  .json-apps {
+    grid-template-columns: 1fr;
+  }
+  .json-line {
+    width: 44px;
+  }
+}
+.json-input.compact {
+  min-height: 64px;
+  height: 64px;
+}
+
+.json-source-tabs {
+  margin-top: 0;
+}
+.json-input.dragging,
+.json-dropzone.dragging {
+  border-color: var(--accent);
+  background: var(--tint-accent);
+}
+.json-upload {
+  display: grid;
+  gap: 10px;
+}
+.json-dropzone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  min-height: 150px;
+  padding: 20px;
+  border: 2px dashed var(--border-strong);
+  border-radius: 12px;
+  background: var(--bg);
+  text-align: center;
+}
+.json-dropzone small {
+  flex-basis: 100%;
+}
+.json-dropzone .primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+.json-dropzone-icon {
+  font-size: 26px;
+  color: var(--accent-text);
+}
+.json-uploads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.json-uploads li {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.json-uploads li.on {
+  border-color: var(--accent);
+  background: var(--tint-accent);
+}
+.json-uploads button {
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+.json-upload-open {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+.json-upload-remove {
+  padding: 0 10px;
+  color: var(--muted);
+  font-size: 16px;
+}
+.json-upload-remove:hover {
+  color: var(--text);
+  background: var(--track);
+}

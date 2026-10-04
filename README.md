@@ -9,6 +9,7 @@ or generate is uploaded anywhere.
 | **Artefact Generator**    | Generates T24 routines and L3 Java hooks in 25 types (Infobasic, jBC, Java). You choose the release, the language and the type, then fill in the inputs. Field names come from a knowledge file you load from your own Temenos-Skills; it stays in this browser. Every template's example compiles against a real T24 R25 install. |
 | **OFS Message Generator** | Builds, parses and inspects OFS messages using the five-part message structure. Configurations are saved in this browser.                                                                                                                                                                                                          |
 | **T24 Log Analyzer**      | Reads up to three T24/TAFJ log files (or pasted content), filters entries, shows OFS and XML details, and sends an entry's OFS message to the OFS Message Generator.                                                                                                                                                               |
+| **JSON Viewer**           | Formats pasted or opened JSON as a foldable, searchable tree, fast even for a 20 MB `fields.json`. A knowledge file also gets a T24 applications index: search an application or field and see its fields as a table.                                                                                                              |
 
 The Routine Creator, OFS Message Generator and T24 Log Analyzer moved here from [RepoMind](https://github.com/zainknoman/RepoMind), which now
 focuses on codebase intelligence (including analysis of T24 source code). See
@@ -30,10 +31,15 @@ focuses on codebase intelligence (including analysis of T24 source code). See
 - **T24 Log Analyzer → entry → 📨 Open in OFS Generator** switches to the OFS Message Generator
   with the application, version, function, transaction id, company and fields filled in.
   Authentication fields are left blank on purpose.
-- `?tool=routine`, `?tool=artefact`, `?tool=ofs` and `?tool=log` open a tool directly.
+- `?tool=routine`, `?tool=artefact`, `?tool=ofs`, `?tool=log` and `?tool=json` open a tool directly.
 - **Artefact Generator**: load a release's `fields.json` with **Load knowledge file…**, then
   choose the language, the routine type and the inputs. See
   [docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md).
+- **JSON Viewer**: paste JSON, or switch to **Upload file** to drop or choose one or more `.json` files (switch between them, or remove one, from the list). Files and pastes over
+  256 KB are parsed straight into the tree instead of the text box. Click **Search** for keys and
+  values, select a line to copy its path or value, and use **Download formatted** for the
+  pretty-printed file. With a `fields.json` loaded, **T24 applications** lists every application
+  and field; **Show in tree** jumps to the application's JSON.
 - Settings saved by RepoMind's OFS tools (and RepoMind's theme) are carried over once on the first
   visit, because both apps are served from the same GitHub Pages origin.
 

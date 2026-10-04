@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **JSON Viewer** (`?tool=json`): paste, drop or open any JSON and read it as a formatted,
+  foldable tree. Only the visible rows are rendered, so a 19 MB `fields.json` opens in about a
+  second and stays smooth fully expanded. Search across keys and values, copy a node's path or
+  value, copy or download the formatted file, and see parse errors with their line and column.
+  A knowledge file also gets a **T24 applications** index (application and field search, field
+  table with position, property, type, mandatory, jBC name and value kind).
+- JSON Viewer **Upload file**: drop or choose one or more `.json` files, switch between them or
+  remove one from the list. Only the open file is parsed and held in memory.
+
 ## 1.1.0 — 2026-10-03
 
 ### Added
