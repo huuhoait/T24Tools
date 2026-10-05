@@ -6,6 +6,7 @@ or generate is uploaded anywhere.
 | Tool                      | What it does                                                                                                                                                                                                                                                                                                                       |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Routine Creator**       | Generates legacy T24/Infobasic routines (tables, verified field positions, F.READ/F.WRITE and other snippets, legacy templates, EVAL queries). **Open existing routine** reads a `.b` file back into the creator or copies it under a new name.                                                                                    |
+| **Routine Builder**       | The Routine Creator with the applications and fields of your release: search any application, tick its fields, and their positions come from the knowledge file. Without one it works like the Routine Creator.                                                                                                                    |
 | **Artefact Generator**    | Generates T24 routines and L3 Java hooks in 25 types (Infobasic, jBC, Java). You choose the release, the language and the type, then fill in the inputs. Field names come from a knowledge file you load from your own Temenos-Skills; it stays in this browser. Every template's example compiles against a real T24 R25 install. |
 | **OFS Message Generator** | Builds, parses and inspects OFS messages using the five-part message structure. Configurations are saved in this browser.                                                                                                                                                                                                          |
 | **T24 Log Analyzer**      | Reads up to three T24/TAFJ log files (or pasted content), filters entries, shows OFS and XML details, and sends an entry's OFS message to the OFS Message Generator.                                                                                                                                                               |
@@ -31,7 +32,10 @@ focuses on codebase intelligence (including analysis of T24 source code). See
 - **T24 Log Analyzer → entry → 📨 Open in OFS Generator** switches to the OFS Message Generator
   with the application, version, function, transaction id, company and fields filled in.
   Authentication fields are left blank on purpose.
-- `?tool=routine`, `?tool=artefact`, `?tool=ofs`, `?tool=log` and `?tool=json` open a tool directly.
+- **Knowledge files**: the header links download the published R23 and R25 `fields.json`, and
+  **Load R23 / R25 from this site** (Routine Builder and Artefact Generator) loads one without
+  the download step. A release loaded in one tool is available in the other.
+- `?tool=routine`, `?tool=builder`, `?tool=artefact`, `?tool=ofs`, `?tool=log` and `?tool=json` open a tool directly.
 - **Artefact Generator**: load a release's `fields.json` with **Load knowledge file…**, then
   choose the language, the routine type and the inputs. See
   [docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md).
@@ -44,6 +48,7 @@ focuses on codebase intelligence (including analysis of T24 source code). See
   visit, because both apps are served from the same GitHub Pages origin.
 
 More detail: [docs/ROUTINE_CREATOR.md](docs/ROUTINE_CREATOR.md),
+[docs/ROUTINE_BUILDER.md](docs/ROUTINE_BUILDER.md),
 [docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md) and [docs/TOOLS.md](docs/TOOLS.md).
 
 ## Development

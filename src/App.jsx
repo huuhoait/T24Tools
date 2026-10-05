@@ -3,6 +3,8 @@ import { Suspense, lazy, useState } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Toaster } from './components/Toaster';
 import { NAV_TABS, initialTab } from './navigation';
+import { siteKnowledgeUrl } from './lib/knowledge';
+import { SITE_RELEASES } from './lib/siteKnowledge';
 import { applyTheme, loadTheme, nextTheme, saveTheme } from './lib/theme';
 
 const THEME_LABELS = { system: 'System', light: 'Light', dark: 'Dark' };
@@ -13,6 +15,10 @@ const named = (loader, name) => lazy(() => loader().then((m) => ({ default: m[na
 const RoutineCreator = named(
   () => import('./features/routineCreator/RoutineCreator'),
   'RoutineCreator',
+);
+const RoutineBuilder = named(
+  () => import('./features/routineBuilder/RoutineBuilder'),
+  'RoutineBuilder',
 );
 const ArtefactGenerator = named(
   () => import('./features/artefactGenerator/ArtefactGenerator'),
@@ -25,11 +31,13 @@ const LogAnalyzer = named(() => import('./features/tools/EmbeddedTools'), 'LogAn
 function App() {
   const [theme, setTheme] = useState(loadTheme);
   const [tab, setTab] = useState(initialTab);
-  // The Routine Creator stays mounted once opened, so an imported routine survives a tab switch.
-  // The embedded tools are remounted on every visit: the OFS Generator reads a Log Analyzer handoff
-  // when its frame starts, exactly as it did in RepoMind.
+  // The Routine Creator and Routine Builder stay mounted once opened, so an imported routine
+  // survives a tab switch. The embedded tools are remounted on every visit: the OFS Generator
+  // reads a Log Analyzer handoff when its frame starts, exactly as it did in RepoMind.
   const [routineMounted, setRoutineMounted] = useState(tab === 'routine');
   if (tab === 'routine' && !routineMounted) setRoutineMounted(true);
+  const [builderMounted, setBuilderMounted] = useState(tab === 'builder');
+  if (tab === 'builder' && !builderMounted) setBuilderMounted(true);
 
   return (
     <>
@@ -47,6 +55,19 @@ function App() {
           </div>
         </div>
         <div className="header-actions">
+          <span className="knowledge-links">
+            Knowledge files:
+            {SITE_RELEASES.map((release) => (
+              <a
+                key={release}
+                href={siteKnowledgeUrl(release)}
+                download={`fields-${release}.json`}
+                title={`Download the ${release} knowledge file (fields.json, about 18 MB)`}
+              >
+                {release} ⬇
+              </a>
+            ))}
+          </span>
           <button
             className="theme-toggle"
             onClick={() => {
@@ -86,7 +107,14 @@ function App() {
               </ErrorBoundary>
             </div>
           )}
-          {tab !== 'routine' && (
+          {builderMounted && (
+            <div hidden={tab !== 'builder'}>
+              <ErrorBoundary>
+                <RoutineBuilder />
+              </ErrorBoundary>
+            </div>
+          )}
+          {tab !== 'routine' && tab !== 'builder' && (
             <ErrorBoundary key={tab}>
               {tab === 'artefact' && <ArtefactGenerator />}
               {tab === 'ofs' && <OFSGenerator />}

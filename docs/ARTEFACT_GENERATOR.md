@@ -5,7 +5,8 @@ real T24 install. Open it from the header or with `?tool=artefact`.
 
 ## The flow
 
-1. **Release**: pick a release you have loaded, or **Load knowledge file…** to add one.
+1. **Release**: pick a release you have loaded, **Load knowledge file…** to add one, or **Load
+   R23 / R25 from this site**. Releases are shared with the Routine Builder.
 2. **Language**: Infobasic (legacy), jBC (componentised) or Java (L3 hooks).
 3. **Routine type**: 25 types, listed below. A type that has no compile-verified template is shown
    disabled as _coming soon_.

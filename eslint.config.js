@@ -31,7 +31,7 @@ export default [
     languageOptions: { globals: { ...globals.browser, ...globals.node, ...globals.worker } },
   },
   {
-    files: ['tests/**/*.js', 'scripts/**/*.{js,mjs}', '*.config.js'],
+    files: ['tests/**/*.js', 'scripts/**/*.{js,mjs}', '*.config.js', 'src/build/**/*.js'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
 ];

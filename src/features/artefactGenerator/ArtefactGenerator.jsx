@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { KnowledgePanel } from '../../components/KnowledgePanel';
 import TEMPLATES from '../../data/templates.json';
+import { knowledgeStore } from '../../lib/knowledge';
 import { cp, dl } from '../../lib/text';
-import { toast } from '../../lib/toast';
-import { fieldsFor, listApps } from './catalog';
 import { checkFields } from './fieldCheck';
-import { createKnowledgeStore } from './knowledgeStore';
 import { fieldList, generateFiles, isMultiField } from './multiField';
+import { AppInput, ChoiceList, FieldPicker } from './pickers';
 import { localIsoDate } from './render';
-
-const store = createKnowledgeStore();
 
 function Step({ n, title, hint, children, done }) {
   return (
@@ -25,146 +23,7 @@ function Step({ n, title, hint, children, done }) {
   );
 }
 
-function ChoiceList({ name, options, value, onChange }) {
-  return (
-    <div className="artefact-choices" role="radiogroup" aria-label={name}>
-      {options.map((o) => (
-        <label
-          key={o.id}
-          className={`artefact-choice${o.disabled ? ' disabled' : ''}${value === o.id ? ' on' : ''}`}
-        >
-          <input
-            type="radio"
-            name={name}
-            value={o.id}
-            checked={value === o.id}
-            disabled={Boolean(o.disabled)}
-            onChange={() => onChange(o.id)}
-          />
-          <span>{o.label}</span>
-          {o.badge && <small className="artefact-badge">{o.badge}</small>}
-        </label>
-      ))}
-    </div>
-  );
-}
-
-function AppInput({ spec, value, knowledge, onChange }) {
-  const listId = `apps-${spec.id}`;
-  const suggestions = useMemo(() => listApps(knowledge, value || '', 50), [knowledge, value]);
-  if (spec.fixed)
-    return (
-      <input aria-label={spec.label} value={spec.fixed} readOnly title="Fixed by this hook type" />
-    );
-  return (
-    <>
-      <input
-        aria-label={spec.label}
-        list={listId}
-        value={value || ''}
-        placeholder="Type to search the release's applications"
-        onChange={(e) => onChange(e.target.value.toUpperCase())}
-      />
-      <datalist id={listId}>
-        {suggestions.map((a) => (
-          <option key={a} value={a} />
-        ))}
-      </datalist>
-    </>
-  );
-}
-
-/**
- * Field list for one field input: a filterable list of the app's fields with checkboxes (several
- * fields, Select all / Clear) or single choice, where the template needs exactly one field.
- */
-function FieldPicker({ spec, app, value, knowledge, language, multiple, onChange }) {
-  const fields = useMemo(() => fieldsFor(knowledge, app, language), [knowledge, app, language]);
-  const [filter, setFilter] = useState('');
-  const selected = useMemo(() => new Set(fieldList(value)), [value]);
-  if (!app) return <p className="muted">Choose the application first.</p>;
-  if (!fields.length) return <p className="muted">{app} is not in this release.</p>;
-
-  const q = filter.trim().toUpperCase();
-  const shown = q
-    ? fields.filter(
-        (f) => f.name.includes(q) || String(f.position) === q || f.code.toUpperCase().includes(q),
-      )
-    : fields;
-  const enabled = fields.filter((f) => !f.disabled);
-  const shownEnabled = shown.filter((f) => !f.disabled);
-  // Selections keep the application's field order, whatever order they were ticked in.
-  const choose = (keep) => onChange(enabled.filter((f) => keep(f.name)).map((f) => f.name));
-  const toggle = (name) =>
-    multiple ? choose((n) => (n === name ? !selected.has(n) : selected.has(n))) : onChange(name);
-  const shownNames = new Set(shownEnabled.map((f) => f.name));
-
-  return (
-    <div className="field-picker" role="group" aria-label={spec.label}>
-      <div className="field-picker-bar">
-        <input
-          type="search"
-          aria-label={`Filter ${spec.label}`}
-          value={filter}
-          placeholder="Filter by name, position or code"
-          onChange={(e) => setFilter(e.target.value)}
-        />
-        {multiple && (
-          <>
-            <button
-              type="button"
-              disabled={!shownEnabled.length}
-              onClick={() => choose((n) => selected.has(n) || shownNames.has(n))}
-            >
-              {q ? `Select shown (${shownEnabled.length})` : `Select all (${enabled.length})`}
-            </button>
-            <button type="button" disabled={!selected.size} onClick={() => onChange([])}>
-              Clear
-            </button>
-          </>
-        )}
-        <small className="muted" aria-live="polite">
-          {multiple
-            ? `${selected.size} of ${enabled.length} selected`
-            : selected.size
-              ? `Selected: ${[...selected][0]}`
-              : 'Choose one field'}
-        </small>
-      </div>
-      <ul className="field-picker-list">
-        {shown.map((f) => (
-          <li key={`${f.position}-${f.name}`}>
-            <label
-              className={`field-picker-item${selected.has(f.name) ? ' on' : ''}${f.disabled ? ' disabled' : ''}`}
-              title={f.disabled || undefined}
-            >
-              <input
-                type={multiple ? 'checkbox' : 'radio'}
-                name={`field-${spec.id}`}
-                value={f.name}
-                checked={selected.has(f.name)}
-                disabled={Boolean(f.disabled)}
-                onChange={() => toggle(f.name)}
-              />
-              <span className="field-picker-pos">{f.position}</span>
-              <span className="field-picker-name">{f.name}</span>
-              {f.kind && <span className="artefact-badge">{f.kind}</span>}
-              <span className="field-picker-note">
-                {f.disabled ? f.disabled : language !== 'infobasic' && f.code ? `→ ${f.code}` : ''}
-              </span>
-            </label>
-          </li>
-        ))}
-        {!shown.length && (
-          <li className="muted field-picker-empty">No field matches “{filter}”.</li>
-        )}
-      </ul>
-    </div>
-  );
-}
-
 export function ArtefactGenerator() {
-  const [releases, setReleases] = useState([]);
   const [release, setRelease] = useState('');
   const [knowledge, setKnowledge] = useState(null);
   const [language, setLanguage] = useState('');
@@ -173,24 +32,24 @@ export function ArtefactGenerator() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [activeFile, setActiveFile] = useState('');
-  const [loadState, setLoadState] = useState({ busy: false, error: '' });
-  const fileInput = useRef(null);
-
-  useEffect(() => {
-    store.listReleases().then((list) => {
-      setReleases(list);
-      if (list.length === 1) setRelease(list[0]);
-    });
-  }, []);
 
   useEffect(() => {
     if (!release) return setKnowledge(null);
-    store.get(release).then(setKnowledge);
+    knowledgeStore.get(release).then(setKnowledge);
   }, [release]);
 
   const lang = TEMPLATES.languages.find((l) => l.id === language);
   const typeEntry = lang?.types.find((t) => t.id === typeId);
   const template = typeEntry?.template ? TEMPLATES.templates[typeEntry.template] : null;
+
+  const chooseRelease = useCallback((r) => {
+    setRelease(r);
+    setLanguage('');
+    setTypeId('');
+    setInputs({});
+    setResult(null);
+    setError('');
+  }, []);
 
   function reset(level) {
     if (level <= 1) setLanguage('');
@@ -198,28 +57,6 @@ export function ArtefactGenerator() {
     if (level <= 3) setInputs({});
     setResult(null);
     setError('');
-  }
-
-  async function loadFile(event) {
-    const file = event.target.files?.[0];
-    event.target.value = '';
-    if (!file) return;
-    setLoadState({ busy: true, error: '' });
-    try {
-      const loaded = await store.loadText(await file.text());
-      setLoadState({ busy: false, error: '' });
-      setReleases(await store.listReleases());
-      setRelease(loaded.release);
-      reset(1);
-      toast.success(
-        `Loaded ${loaded.release}: ${loaded.appCount.toLocaleString()} applications, ${loaded.fieldCount.toLocaleString()} fields` +
-          (loaded.persisted ? '' : ' (this browser blocks storage: it will not be remembered)'),
-      );
-    } catch (e) {
-      // Kept on screen (a toast alone disappears before a large file's error is noticed).
-      setLoadState({ busy: false, error: `${file.name}: ${e.message}` });
-      toast.error(e.message);
-    }
   }
 
   function chooseType(id) {
@@ -262,7 +99,6 @@ export function ArtefactGenerator() {
     }
   }
 
-  const releaseOptions = releases.map((r) => ({ id: r, label: r }));
   const languageOptions = TEMPLATES.languages.map((l) => ({
     id: l.id,
     label: l.label,
@@ -297,51 +133,7 @@ export function ArtefactGenerator() {
         hint="Which T24 release the code is for."
         done={Boolean(knowledge)}
       >
-        {releaseOptions.length ? (
-          <ChoiceList
-            name="Release"
-            options={releaseOptions}
-            value={release}
-            onChange={(r) => {
-              setRelease(r);
-              reset(1);
-            }}
-          />
-        ) : (
-          <p className="muted">No knowledge file loaded yet.</p>
-        )}
-        <div className="routine-creator-actions">
-          <button
-            type="button"
-            disabled={loadState.busy}
-            onClick={() => fileInput.current?.click()}
-          >
-            {loadState.busy ? 'Reading knowledge file…' : 'Load knowledge file…'}
-          </button>
-          <input
-            ref={fileInput}
-            type="file"
-            accept=".json,application/json"
-            hidden
-            onChange={loadFile}
-            aria-label="Knowledge file"
-          />
-          <small className="muted">
-            A <code>fields.json</code> exported from your own Temenos-Skills (one per release). It
-            is kept only in this browser.
-          </small>
-        </div>
-        {loadState.error && (
-          <p className="routine-validation" role="alert">
-            {loadState.error}
-          </p>
-        )}
-        {knowledge && (
-          <p className="muted">
-            {knowledge.release}: {knowledge.appCount?.toLocaleString()} applications ·{' '}
-            {knowledge.fieldCount?.toLocaleString()} fields
-          </p>
-        )}
+        <KnowledgePanel release={release} knowledge={knowledge} onRelease={chooseRelease} />
       </Step>
 
       {knowledge && (

@@ -91,3 +91,58 @@ describe('createKnowledgeStore', () => {
     expect(await store.listReleases()).toEqual([]);
   });
 });
+
+describe('loadUrl', () => {
+  const respond =
+    (body, ok = true, status = 200) =>
+    async (url) => ({
+      ok,
+      status,
+      url,
+      text: async () => body,
+    });
+
+  it('fetches a knowledge file and keeps it like an uploaded one', async () => {
+    const store = createKnowledgeStore(memoryAdapter());
+    const urls = [];
+    const fetchImpl = async (url) => {
+      urls.push(url);
+      return respond(sample('R23'))(url);
+    };
+    const result = await store.loadUrl('knowledge/R23/fields.json', fetchImpl);
+    expect(urls).toEqual(['knowledge/R23/fields.json']);
+    expect(result).toMatchObject({ release: 'R23', appCount: 1, fieldCount: 2, persisted: true });
+    expect(await store.listReleases()).toEqual(['R23']);
+  });
+
+  it('reports an HTTP failure instead of parsing the error page', async () => {
+    const store = createKnowledgeStore(memoryAdapter());
+    await expect(
+      store.loadUrl('knowledge/R99/fields.json', respond('<html>', false, 404)),
+    ).rejects.toThrow(/HTTP 404/);
+    expect(await store.listReleases()).toEqual([]);
+  });
+
+  it('reports a network failure', async () => {
+    const store = createKnowledgeStore(memoryAdapter());
+    const offline = async () => {
+      throw new TypeError('Failed to fetch');
+    };
+    await expect(store.loadUrl('knowledge/R23/fields.json', offline)).rejects.toThrow(
+      KnowledgeError,
+    );
+  });
+});
+
+describe('subscribe', () => {
+  it('tells every listener when a release is loaded or removed, until it unsubscribes', async () => {
+    const store = createKnowledgeStore(memoryAdapter());
+    const seen = [];
+    const stop = store.subscribe(() => seen.push('change'));
+    await store.loadText(sample('R25'));
+    await store.remove('R25');
+    stop();
+    await store.loadText(sample('R23'));
+    expect(seen).toEqual(['change', 'change']);
+  });
+});

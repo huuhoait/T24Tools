@@ -291,6 +291,34 @@ header {
   gap: 8px;
   align-items: center;
 }
+/* The header is always dark, so its links use fixed light colors rather than theme tokens. */
+.knowledge-links {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: #aeb8c9;
+}
+.knowledge-links a {
+  padding: 5px 9px;
+  border: 1px solid #334155;
+  border-radius: 7px;
+  color: #e2e8f0;
+  font-weight: 600;
+  text-decoration: none;
+}
+.knowledge-links a:hover {
+  border-color: #7dd3fc;
+  color: #fff;
+}
+@media (max-width: 760px) {
+  .knowledge-links {
+    display: none;
+  }
+}
+.routine-card .artefact-field + .artefact-field {
+  margin-top: 14px;
+}
 /* Accessibility and shell components. */
 :focus-visible {
   outline: 3px solid var(--focus);

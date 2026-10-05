@@ -4,6 +4,14 @@
 
 ### Added
 
+- **Routine Builder** (`?tool=builder`): the Routine Creator with the Artefact Generator's
+  application search and field lists. Load a release, pick any of its applications (not only the
+  16 built-in ones) and tick fields; their positions come from the release. Without a knowledge
+  file it works like the Routine Creator, which is unchanged. See
+  [docs/ROUTINE_BUILDER.md](docs/ROUTINE_BUILDER.md).
+- The R23 and R25 knowledge files are published with the site: download them from the header
+  (**Knowledge files: R23 ⬇ R25 ⬇**), or load one in a click with **Load R23 / R25 from this
+  site**. A release loaded once is shared by the Artefact Generator and the Routine Builder.
 - **JSON Viewer** (`?tool=json`): paste, drop or open any JSON and read it as a formatted,
   foldable tree. Only the visible rows are rendered, so a 19 MB `fields.json` opens in about a
   second and stays smooth fully expanded. Search across keys and values, copy a node's path or

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { knowledgeFilesPlugin } from './src/build/knowledgeFiles.js';
 
 // GitHub Pages cannot send response headers, so production builds carry the Content Security Policy
 // as a <meta> tag. T24Tools makes no network calls: everything, including uploaded routines and
@@ -34,7 +35,7 @@ const cspPlugin = {
 // production bundle exactly as it is deployed; the dev server stays at the root for convenience.
 export default defineConfig(({ command, isPreview }) => ({
   base: command === 'build' || isPreview ? '/T24Tools/' : '/',
-  plugins: [react(), cspPlugin],
+  plugins: [react(), cspPlugin, knowledgeFilesPlugin()],
   test: {
     environment: 'node',
     include: ['src/**/*.test.{js,jsx}'],

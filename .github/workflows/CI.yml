@@ -49,7 +49,10 @@ jobs:
         run: npm run build
 
       - name: Verify build output
-        run: test -f dist/index.html
+        run: |
+          test -f dist/index.html
+          test -s dist/knowledge/R23/fields.json
+          test -s dist/knowledge/R25/fields.json
 
   e2e:
     name: End-to-end tests (production build)

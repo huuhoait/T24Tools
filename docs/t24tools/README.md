@@ -14,8 +14,11 @@ Per-release knowledge files for the **Artefact Generator** (`?tool=artefact`), e
 Each `fields.json` (schemaVersion 3) holds, per application, the field name, position, Java
 alias, type / mandatory flag where known, componentised (jBC) name and single/multi-value flag.
 
-To use one, download it, then in T24Tools choose **Artefact Generator → Load knowledge file…**.
-The file stays in your browser. The website does not load these files by itself.
+The site publishes `R23/fields.json` and `R25/fields.json` at `knowledge/<R>/fields.json`. Download
+one from the header (**Knowledge files: R23 ⬇ R25 ⬇**) and choose **Load knowledge file…**, or
+click **Load R23 / R25 from this site** in the Artefact Generator or the Routine Builder. Either
+way the file is kept only in your browser and shared by both tools. The site loads a file only
+when you click one of these buttons.
 
 Field descriptions (`descriptions.json`) are intentionally not published; the manifests still list
 them because they are produced by the same export.

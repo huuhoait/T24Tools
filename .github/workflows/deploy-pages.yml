@@ -40,8 +40,11 @@ jobs:
       - name: Build production bundle
         run: npm run build
 
-      - name: Verify Pages entry point
-        run: test -f dist/index.html
+      - name: Verify Pages entry point and knowledge files
+        run: |
+          test -f dist/index.html
+          test -s dist/knowledge/R23/fields.json
+          test -s dist/knowledge/R25/fields.json
 
       - name: Add SPA fallback
         run: cp dist/index.html dist/404.html

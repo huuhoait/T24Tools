@@ -96,8 +96,16 @@ export function indexedDbAdapter(indexedDB = globalThis.indexedDB) {
 
 export function createKnowledgeStore(adapter = indexedDbAdapter()) {
   const session = new Map(); // release -> parsed knowledge (also covers blocked storage)
+  const listeners = new Set(); // tools that stay mounted refresh their release list on a change
+  const changed = () => listeners.forEach((listener) => listener());
 
   return {
+    /** Call `listener` after every load or removal; returns the unsubscribe function. */
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+
     /** Parse, keep for the session and try to remember it. Returns { release, appCount, fieldCount, persisted }. */
     async loadText(text) {
       const knowledge = parseKnowledge(text);
@@ -108,12 +116,26 @@ export function createKnowledgeStore(adapter = indexedDbAdapter()) {
       } catch {
         persisted = false;
       }
+      changed();
       return {
         release: knowledge.release,
         appCount: knowledge.appCount,
         fieldCount: knowledge.fieldCount,
         persisted,
       };
+    },
+
+    /** Fetch a knowledge file published with the site (same origin), then load it as above. */
+    async loadUrl(url, fetchImpl = globalThis.fetch) {
+      let response;
+      try {
+        response = await fetchImpl(url);
+      } catch (e) {
+        throw new KnowledgeError(`Could not download ${url}: ${e.message}`);
+      }
+      if (!response.ok)
+        throw new KnowledgeError(`Could not download ${url} (HTTP ${response.status}).`);
+      return this.loadText(await response.text());
     },
 
     async listReleases() {
@@ -147,6 +169,7 @@ export function createKnowledgeStore(adapter = indexedDbAdapter()) {
       } catch {
         // storage blocked: nothing was stored
       }
+      changed();
     },
   };
 }
