@@ -1491,180 +1491,159 @@ textarea {
   cursor: pointer;
   font-family: ui-monospace, Consolas, monospace;
 }
-/* Markdown Viewer: MDFV manuscript sheet, local font stacks (the CSP blocks Google Fonts) */
-:root {
-  --md-paper: #faf7f0;
-  --md-canvas: #fff;
-  --md-ink: #23211d;
-  --md-soft: #5b5648;
-  --md-spine: #445f5a;
-  --md-spine-dark: #324644;
-  --md-line: #dedacd;
-  --md-rust: #a6462e;
-  --md-tab-ink: #faf7f0;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --md-paper: #1f1e1b;
-    --md-canvas: #262521;
-    --md-ink: #ece8de;
-    --md-soft: #b5ae9e;
-    --md-spine: #7fa59d;
-    --md-spine-dark: #a9cbc3;
-    --md-line: #3a3832;
-    --md-rust: #d9805f;
-    --md-tab-ink: #161716;
-  }
-}
-:root[data-theme='dark'] {
-  --md-paper: #1f1e1b;
-  --md-canvas: #262521;
-  --md-ink: #ece8de;
-  --md-soft: #b5ae9e;
-  --md-spine: #7fa59d;
-  --md-spine-dark: #a9cbc3;
-  --md-line: #3a3832;
-  --md-rust: #d9805f;
-  --md-tab-ink: #161716;
-}
+/* Markdown Viewer: rendered Markdown in the T24Tools card style and theme tokens */
 .md-input {
   width: 100%;
   min-height: 160px;
-  font-family: ui-monospace, Consolas, monospace;
-  font-size: 13px;
-}
-.md-intake.dragging {
-  outline: 2px dashed var(--md-spine);
-}
-.md-frame {
-  position: relative;
-  margin-top: 28px;
-}
-.md-tab {
-  position: absolute;
-  top: -15px;
-  left: 28px;
-  background: var(--md-spine);
-  color: var(--md-tab-ink);
   font:
-    11px/1 ui-monospace,
+    13px/1.5 ui-monospace,
+    SFMono-Regular,
     Consolas,
     monospace;
-  letter-spacing: 0.06em;
-  padding: 7px 12px 5px;
-  border-radius: 2px 2px 0 0;
-  z-index: 2;
+}
+.md-intake.dragging {
+  outline: 2px dashed var(--accent);
+  outline-offset: 2px;
+}
+.md-frame {
+  margin-top: 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.md-tab {
+  display: block;
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--accent-text);
+  font:
+    600 12px/1.4 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
 }
 .md-sheet {
-  background: var(--md-canvas);
-  color: var(--md-ink);
-  border: 1px solid var(--md-line);
-  border-top: 3px solid var(--md-spine);
-  border-radius: 2px;
-  padding: 40px 48px;
+  padding: 22px 28px 28px;
+  color: var(--text);
   font:
-    17px/1.7 'Iowan Old Style',
-    'Palatino Linotype',
-    Georgia,
-    serif;
+    15px/1.65 Inter,
+    system-ui,
+    sans-serif;
   overflow-wrap: break-word;
-  box-shadow:
-    0 2px 0 var(--md-line),
-    0 14px 30px -18px rgba(35, 33, 29, 0.25);
 }
 .md-sheet > :first-child {
   margin-top: 0;
 }
 .md-sheet h1,
 .md-sheet h2,
-.md-sheet h3 {
-  font-weight: 600;
-  letter-spacing: -0.01em;
+.md-sheet h3,
+.md-sheet h4 {
+  margin: 1.5em 0 0.5em;
+  color: var(--text);
+  font-weight: 700;
   line-height: 1.3;
 }
 .md-sheet h1 {
-  font-size: 30px;
-  border-bottom: 2px solid var(--md-ink);
-  padding-bottom: 10px;
+  font-size: 26px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
 }
 .md-sheet h2 {
-  font-size: 23px;
-  margin-top: 2em;
+  font-size: 20px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.md-sheet h3 {
+  font-size: 16px;
+}
+.md-sheet p,
+.md-sheet li {
+  color: var(--text-2);
 }
 .md-sheet a {
-  color: var(--md-spine-dark);
+  color: var(--accent);
 }
 .md-sheet code {
-  font-family: ui-monospace, Consolas, monospace;
-  font-size: 0.82em;
-  background: var(--md-paper);
-  border: 1px solid var(--md-line);
-  border-radius: 2px;
-  padding: 1px 5px;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  font:
+    0.85em ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
 }
 .md-sheet pre {
-  background: var(--md-paper);
-  border: 1px solid var(--md-line);
-  border-left: 3px solid var(--md-spine);
-  border-radius: 2px;
-  padding: 16px 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
   overflow-x: auto;
   line-height: 1.5;
 }
 .md-sheet pre code {
-  border: 0;
   padding: 0;
+  border: 0;
   background: none;
   font-size: 13px;
 }
 .md-sheet blockquote {
-  margin: 1.4em 0;
-  padding: 4px 20px;
-  border-left: 3px solid var(--md-rust);
-  color: var(--md-soft);
-  font-style: italic;
+  margin: 1.2em 0;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: var(--tint-accent);
+}
+.md-sheet blockquote p {
+  margin: 0.4em 0;
 }
 .md-sheet table {
-  border-collapse: collapse;
   display: block;
-  overflow-x: auto;
   max-width: 100%;
-  font:
-    14px/1.5 system-ui,
-    sans-serif;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 13.5px;
 }
 .md-sheet th,
 .md-sheet td {
-  border: 1px solid var(--md-line);
-  padding: 8px 12px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
 }
 .md-sheet th {
-  background: var(--md-paper);
-  font:
-    11px ui-monospace,
-    Consolas,
-    monospace;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  background: var(--surface-2);
+  font-weight: 700;
 }
 .md-sheet img {
   max-width: 100%;
 }
 .md-sheet hr {
+  margin: 2em 0;
   border: 0;
-  border-top: 1px solid var(--md-line);
-  margin: 2.2em 0;
+  border-top: 1px solid var(--border);
 }
+/* Mermaid draws with its light default theme, so diagrams sit on a light panel in both themes. */
 .md-sheet .mermaid {
-  text-align: center;
   margin: 1.2em 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #172033;
+  text-align: center;
+  overflow-x: auto;
 }
-@media (max-width: 800px) {
+.md-sheet .mermaid p,
+.md-sheet .mermaid li {
+  margin: 0;
+  color: inherit;
+}
+@media (max-width: 760px) {
   .md-sheet {
-    padding: 28px 18px;
-    font-size: 16px;
-  }
-  .md-tab {
-    left: 14px;
+    padding: 18px 16px 22px;
   }
 }
