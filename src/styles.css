@@ -1235,6 +1235,18 @@ textarea {
 .json-source-tabs {
   margin-top: 0;
 }
+.json-source-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+}
+.json-site-load {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .json-input.dragging,
 .json-dropzone.dragging {
   border-color: var(--accent);

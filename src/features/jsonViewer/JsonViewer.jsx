@@ -1,4 +1,6 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import { siteKnowledgeUrl } from '../../lib/knowledge';
+import { SITE_RELEASES } from '../../lib/siteKnowledge';
 import { cp, dl } from '../../lib/text';
 import { toast } from '../../lib/toast';
 import { listApps } from '../artefactGenerator/catalog';
@@ -510,6 +512,26 @@ export function JsonViewer() {
     openFile(entry.file);
   }
 
+  /** Opens a release's fields.json as published with this site (see src/build/knowledgeFiles.js). */
+  async function loadSite(release) {
+    const label = `fields.json ${release} (this site)`;
+    clearTimeout(typingTimer.current);
+    setBusy(`Loading ${release} from this site…`);
+    setError('');
+    try {
+      const res = await fetch(siteKnowledgeUrl(release));
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      if (input.current) input.current.value = '';
+      setActiveUpload('');
+      setLargeSource(`${label} · ${formatBytes(text.length)}`);
+      await parse(text, label);
+    } catch (e) {
+      setBusy('');
+      setError(`${label}: ${e.message}`);
+    }
+  }
+
   function removeUpload(id) {
     setUploads((current) => current.filter((u) => u.id !== id));
     if (id === activeUpload) clear();
@@ -568,31 +590,45 @@ export function JsonViewer() {
           <span className="eyebrow">Application Viewer</span>
           <h1>Read any JSON, even a 20 MB knowledge file</h1>
           <p className="muted">
-            Paste JSON or upload a file to see it formatted, folded and searchable. A T24{' '}
-            <code>fields.json</code> knowledge file also gets an applications index. Everything
-            stays in this browser.
+            Paste JSON, upload a file or load a release published with this site to see it
+            formatted, folded and searchable. A T24 <code>fields.json</code> knowledge file also
+            gets an applications index. Everything stays in this browser.
           </p>
         </div>
       </div>
 
       <section className="routine-card json-source" aria-label="Input">
-        <div className="tabs json-source-tabs" role="tablist" aria-label="Input method">
-          <button
-            role="tab"
-            aria-selected={source === 'paste'}
-            className={source === 'paste' ? 'active' : undefined}
-            onClick={() => setSource('paste')}
-          >
-            Paste JSON
-          </button>
-          <button
-            role="tab"
-            aria-selected={source === 'upload'}
-            className={source === 'upload' ? 'active' : undefined}
-            onClick={() => setSource('upload')}
-          >
-            Upload file{uploads.length ? ` (${uploads.length})` : ''}
-          </button>
+        <div className="json-source-bar">
+          <div className="tabs json-source-tabs" role="tablist" aria-label="Input method">
+            <button
+              role="tab"
+              aria-selected={source === 'paste'}
+              className={source === 'paste' ? 'active' : undefined}
+              onClick={() => setSource('paste')}
+            >
+              Paste JSON
+            </button>
+            <button
+              role="tab"
+              aria-selected={source === 'upload'}
+              className={source === 'upload' ? 'active' : undefined}
+              onClick={() => setSource('upload')}
+            >
+              Upload file{uploads.length ? ` (${uploads.length})` : ''}
+            </button>
+          </div>
+          <div className="json-site-load">
+            {SITE_RELEASES.map((release) => (
+              <button
+                key={release}
+                type="button"
+                disabled={busy !== ''}
+                onClick={() => loadSite(release)}
+              >
+                Load {release} from this site
+              </button>
+            ))}
+          </div>
         </div>
         <input
           ref={fileInput}

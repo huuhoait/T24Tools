@@ -74,4 +74,24 @@ test.describe('Application Viewer', () => {
     await page.getByRole('button', { name: 'Show in tree' }).click();
     await expect(page.getByLabel('JSON tree')).toContainText('"SC.NAME"');
   });
+
+  test('Load R23 / R25 from this site opens the published fields.json', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto('./?tool=json');
+    const tabs = page.getByRole('tablist', { name: 'Input method' });
+    await expect(tabs.getByRole('tab')).toHaveText(['Paste JSON', 'Upload file']);
+    for (const release of ['R23', 'R25']) {
+      await page.getByRole('button', { name: `Load ${release} from this site` }).click();
+      await expect(
+        page.getByText(new RegExp(`T24 knowledge ${release} · [\\d,]+ apps`)),
+      ).toBeVisible({
+        timeout: 30_000,
+      });
+    }
+    await page.getByRole('tab', { name: 'T24 applications' }).click();
+    await page.getByLabel('Search applications and fields').fill('ACCOUNT');
+    await expect(page.getByRole('list', { name: 'Fields' })).toBeVisible();
+    expect(errors).toEqual([]);
+  });
 });
