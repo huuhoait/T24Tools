@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { renderMarkdown } from '../../lib/markdown';
 import { renderMermaidBlocks } from '../../services/diagram';
 
-// RepoMind's Markdown viewer (paste, sanitised, mermaid) with MDFV's file upload and manuscript sheet.
+// RepoMind's Markdown viewer (paste, sanitised, mermaid) with MDFV's file upload, in the T24Tools card style.
 export function MarkdownViewer() {
   const fileInput = useRef(null);
   const sheet = useRef(null);
