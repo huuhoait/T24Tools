@@ -9,17 +9,31 @@
   16 built-in ones) and tick fields; their positions come from the release. Without a knowledge
   file it works like the Routine Creator, which is unchanged. See
   [docs/ROUTINE_BUILDER.md](docs/ROUTINE_BUILDER.md).
-- The R23 and R25 knowledge files are published with the site: download them from the header
-  (**Knowledge files: R23 ⬇ R25 ⬇**), or load one in a click with **Load R23 / R25 from this
-  site**. A release loaded once is shared by the Artefact Generator and the Routine Builder.
-- **JSON Viewer** (`?tool=json`): paste, drop or open any JSON and read it as a formatted,
+- The R23 and R25 knowledge files (`fields.json`, `classes.json`) are published with the site and
+  load in a click with **Load R23 / R25 from this site** in the Routine Builder, Artefact
+  Generator, Application Viewer and JAR Viewer. A release loaded once is shared by the Artefact
+  Generator and the Routine Builder. There is no download link in the header.
+- **Application Viewer** (`?tool=json`, formerly JSON Viewer): paste, drop or open any JSON and read it as a formatted,
   foldable tree. Only the visible rows are rendered, so a 19 MB `fields.json` opens in about a
   second and stays smooth fully expanded. Search across keys and values, copy a node's path or
   value, copy or download the formatted file, and see parse errors with their line and column.
   A knowledge file also gets a **T24 applications** index (application and field search, field
   table with position, property, type, mandatory, jBC name and value kind).
-- JSON Viewer **Upload file**: drop or choose one or more `.json` files, switch between them or
-  remove one from the list. Only the open file is parsed and held in memory.
+- Application Viewer **Upload file**: drop or choose one or more `.json` files, switch between
+  them or remove one from the list. Only the open file is parsed and held in memory.
+- Application Viewer **Load R23 / R25 from this site**: opens a published `fields.json`, with its
+  T24 applications index, without downloading it first.
+- **JAR Viewer** (`?tool=jar`): which JAR and package holds a T24 Java class, for R23 and R25.
+  Load a published `classes.json` (or your own), search a class, qualified name, package or JAR
+  (ranked, case-insensitive, type filter), list a JAR's classes by package, see a class's flags,
+  superclass and interfaces (linked when indexed), public methods of hook, API, batch, service,
+  integration and TAFJ classes, and copy its `import`. With both releases loaded, each class shows
+  whether it kept its JAR, moved, or exists in one release only. R25 also indexes the TAFJ runtime
+  JARs (`TAFJ*`, `Temn*`, type `tafj`), so superclasses such as `T24Context` resolve.
+- **Markdown Viewer** (`?tool=md`): paste Markdown or open `.md` files and read them rendered:
+  GitHub tables, code, nested lists and Mermaid diagrams (bundled and loaded on first use, strict
+  security level). HTML in the Markdown is sanitised, so scripts never run; files stay in this
+  browser.
 - Artefact Generator: field inputs are a filterable list instead of a drop-down. Where a template
   supports it, tick several fields (or **Select all** / **Select shown**) and the field-specific
   code is repeated for each; one field still renders the compile-verified template unchanged.
