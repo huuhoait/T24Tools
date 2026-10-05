@@ -52,4 +52,23 @@ test.describe('JAR Viewer', () => {
       'EB_TemplateHook.jar',
     );
   });
+
+  test('in R25 the RecordLifecycle superclass links to T24Context in the TAFJ runtime', async ({
+    page,
+  }) => {
+    await page.goto('./?tool=jar');
+    await page.getByRole('button', { name: 'Load R25 from this site' }).click();
+    await expect(page.getByText(/R25 · [\d,]+ classes/)).toBeVisible({ timeout: 30_000 });
+    await page.getByLabel('Search classes, packages or JARs').fill('RecordLifecycle');
+    await page
+      .getByRole('button', { name: /^RecordLifecycle com\.temenos\.t24\.api\.hook\.system/ })
+      .click();
+    const detail = page.getByRole('region', { name: 'Class detail' });
+    await detail
+      .getByRole('button', { name: 'com.temenos.tafj.api.client.impl.T24Context' })
+      .click();
+    await expect(detail.getByRole('heading', { name: 'T24Context' })).toBeVisible();
+    await expect(detail).toContainText('TAFJClient.jar');
+    await expect(detail).toContainText('tafj');
+  });
 });

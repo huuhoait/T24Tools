@@ -14,10 +14,10 @@
       "sha256": "f20f3d4440c8f3b46d02cadbe4ec8a5d6f3c4ac29c34b1db4b9dadcfe2d73ff7"
     },
     "classes.json": {
-      "bytes": 8971093,
-      "sha256": "83f73870289dc44fd801821a52737f3effff3322658dad0c7e0fa7045e932fe9"
+      "bytes": 9162829,
+      "sha256": "97a42f8215800a66245183d33b38b4603f0fc202d7d5b2f440c9332711268c57"
     }
   },
-  "classes": 99494,
-  "jars": 2133
+  "classes": 100770,
+  "jars": 2152
 }
