@@ -30,7 +30,7 @@ test.describe('T24Tools shell', () => {
       'Artefact Generator',
       'OFS Message Generator',
       'T24 Log Analyzer',
-      'JSON Viewer',
+      'Application Viewer',
     ]);
     await expect(nav.getByRole('button', { name: 'Routine Creator' })).toHaveAttribute(
       'aria-current',

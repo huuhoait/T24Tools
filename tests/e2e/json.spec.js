@@ -5,7 +5,7 @@ import { expect, test } from '@playwright/test';
 // Synthetic knowledge file: sample app and fields only, no Temenos data.
 const KNOWLEDGE = fileURLToPath(new URL('./fixtures/knowledge-RTEST.json', import.meta.url));
 
-test.describe('JSON Viewer', () => {
+test.describe('Application Viewer', () => {
   test('pasted JSON is formatted, folded and searchable', async ({ page }) => {
     const errors = [];
     page.on('pageerror', (e) => errors.push(e.message));

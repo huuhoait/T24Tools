@@ -565,7 +565,7 @@ export function JsonViewer() {
     <div className="routine-creator json-viewer">
       <div className="routine-creator-hero">
         <div>
-          <span className="eyebrow">JSON Viewer</span>
+          <span className="eyebrow">Application Viewer</span>
           <h1>Read any JSON, even a 20 MB knowledge file</h1>
           <p className="muted">
             Paste JSON or upload a file to see it formatted, folded and searchable. A T24{' '}

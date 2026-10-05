@@ -7,16 +7,10 @@ const KNOWLEDGE = fileURLToPath(new URL('./fixtures/knowledge-RTEST.json', impor
 const output = (page) => page.locator('textarea.routine-output:visible');
 
 test.describe('Knowledge files', () => {
-  test('the header links download the published R23 and R25 files', async ({ page }) => {
+  test('the header has no knowledge download links', async ({ page }) => {
     await page.goto('./');
-    for (const release of ['R23', 'R25']) {
-      const link = page.locator('header').getByRole('link', { name: `${release} ⬇` });
-      await expect(link).toHaveAttribute('download', `fields-${release}.json`);
-      const response = await page.request.get(await link.getAttribute('href'));
-      expect(response.ok()).toBe(true);
-      const body = await response.json();
-      expect(body).toMatchObject({ release, schemaVersion: 3 });
-    }
+    await expect(page.locator('header a[download]')).toHaveCount(0);
+    await expect(page.locator('header')).not.toContainText('Knowledge files');
   });
 
   test('a file loaded in the Artefact Generator is ready in the Routine Builder', async ({

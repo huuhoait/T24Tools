@@ -3,8 +3,6 @@ import { Suspense, lazy, useState } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Toaster } from './components/Toaster';
 import { NAV_TABS, initialTab } from './navigation';
-import { siteKnowledgeUrl } from './lib/knowledge';
-import { SITE_RELEASES } from './lib/siteKnowledge';
 import { applyTheme, loadTheme, nextTheme, saveTheme } from './lib/theme';
 
 const THEME_LABELS = { system: 'System', light: 'Light', dark: 'Dark' };
@@ -55,19 +53,6 @@ function App() {
           </div>
         </div>
         <div className="header-actions">
-          <span className="knowledge-links">
-            Knowledge files:
-            {SITE_RELEASES.map((release) => (
-              <a
-                key={release}
-                href={siteKnowledgeUrl(release)}
-                download={`fields-${release}.json`}
-                title={`Download the ${release} knowledge file (fields.json, about 18 MB)`}
-              >
-                {release} ⬇
-              </a>
-            ))}
-          </span>
           <button
             className="theme-toggle"
             onClick={() => {

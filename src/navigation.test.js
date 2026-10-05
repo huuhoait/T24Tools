@@ -9,7 +9,7 @@ describe('navigation', () => {
       ['artefact', 'Artefact Generator'],
       ['ofs', 'OFS Message Generator'],
       ['log', 'T24 Log Analyzer'],
-      ['json', 'JSON Viewer'],
+      ['json', 'Application Viewer'],
     ]);
   });
 

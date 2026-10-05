@@ -10,7 +10,7 @@ or generate is uploaded anywhere.
 | **Artefact Generator**    | Generates T24 routines and L3 Java hooks in 25 types (Infobasic, jBC, Java). You choose the release, the language and the type, then fill in the inputs. Field names come from a knowledge file you load from your own Temenos-Skills; it stays in this browser. Every template's example compiles against a real T24 R25 install. |
 | **OFS Message Generator** | Builds, parses and inspects OFS messages using the five-part message structure. Configurations are saved in this browser.                                                                                                                                                                                                          |
 | **T24 Log Analyzer**      | Reads up to three T24/TAFJ log files (or pasted content), filters entries, shows OFS and XML details, and sends an entry's OFS message to the OFS Message Generator.                                                                                                                                                               |
-| **JSON Viewer**           | Formats pasted or opened JSON as a foldable, searchable tree, fast even for a 20 MB `fields.json`. A knowledge file also gets a T24 applications index: search an application or field and see its fields as a table.                                                                                                              |
+| **Application Viewer**    | Formats pasted or opened JSON as a foldable, searchable tree, fast even for a 20 MB `fields.json`. A knowledge file also gets a T24 applications index: search an application or field and see its fields as a table.                                                                                                              |
 
 The Routine Creator, OFS Message Generator and T24 Log Analyzer moved here from [RepoMind](https://github.com/zainknoman/RepoMind), which now
 focuses on codebase intelligence (including analysis of T24 source code). See
@@ -32,14 +32,13 @@ focuses on codebase intelligence (including analysis of T24 source code). See
 - **T24 Log Analyzer → entry → 📨 Open in OFS Generator** switches to the OFS Message Generator
   with the application, version, function, transaction id, company and fields filled in.
   Authentication fields are left blank on purpose.
-- **Knowledge files**: the header links download the published R23 and R25 `fields.json`, and
-  **Load R23 / R25 from this site** (Routine Builder and Artefact Generator) loads one without
-  the download step. A release loaded in one tool is available in the other.
+- **Knowledge files**: **Load R23 / R25 from this site** (Routine Builder, Artefact Generator,
+  Application Viewer, JAR Viewer) loads a published release; you can also open your own file.
 - `?tool=routine`, `?tool=builder`, `?tool=artefact`, `?tool=ofs`, `?tool=log` and `?tool=json` open a tool directly.
 - **Artefact Generator**: load a release's `fields.json` with **Load knowledge file…**, then
   choose the language, the routine type and the inputs. See
   [docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md).
-- **JSON Viewer**: paste JSON, or switch to **Upload file** to drop or choose one or more `.json` files (switch between them, or remove one, from the list). Files and pastes over
+- **Application Viewer**: paste JSON, or switch to **Upload file** to drop or choose one or more `.json` files (switch between them, or remove one, from the list). Files and pastes over
   256 KB are parsed straight into the tree instead of the text box. Click **Search** for keys and
   values, select a line to copy its path or value, and use **Download formatted** for the
   pretty-printed file. With a `fields.json` loaded, **T24 applications** lists every application
@@ -83,5 +82,6 @@ connections beyond this site.
 ## Disclaimer
 
 T24Tools is an independent project. It is not affiliated with or endorsed by Temenos. Temenos,
-T24 and Transact are trademarks of Temenos AG. T24Tools contains no Temenos data: field data is
-loaded by each user from their own knowledge file and never leaves their browser.
+T24 and Transact are trademarks of Temenos AG. The only Temenos-derived data T24Tools uses is
+application field names (`fields.json`) and Java class and JAR names (`classes.json`), generated
+from T24 product JARs. Files you open stay in your browser.
