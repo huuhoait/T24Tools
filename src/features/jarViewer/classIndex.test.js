@@ -6,6 +6,7 @@ import {
   decodeClassIndex,
   isJarQuery,
   searchClasses,
+  visibleTypesAfterLoad,
 } from './classIndex';
 
 // Synthetic index in the classes.json format (no Temenos data).
@@ -137,5 +138,23 @@ describe('compareReleases', () => {
     });
     expect(diff.get('com.x.core.NewOne').status).toBe('onlyB');
     expect(diff.get('com.x.core.Shared').status).toBe('onlyA');
+  });
+});
+
+describe('visibleTypesAfterLoad', () => {
+  it('starts with every type except the hidden ones', () => {
+    expect([...visibleTypesAfterLoad(null, [], ['hook', 'internal', 'test', 'tafj'])]).toEqual([
+      'hook',
+      'tafj',
+    ]);
+  });
+  it('shows a type that a later release brings, and keeps the user’s choices', () => {
+    const shown = new Set(['public-api']); // the user unticked hook
+    const next = visibleTypesAfterLoad(
+      shown,
+      [['hook', 'internal', 'public-api']],
+      ['hook', 'tafj'],
+    );
+    expect([...next].sort()).toEqual(['public-api', 'tafj']);
   });
 });

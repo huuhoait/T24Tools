@@ -106,3 +106,14 @@ export function compareReleases(a, b) {
   }
   return out;
 }
+
+/** Types ticked after a release loads: the defaults the first time; afterwards the user's choice,
+ * plus any type no loaded release had yet (e.g. R25's tafj after R23), unless hidden by default. */
+export function visibleTypesAfterLoad(shown, loadedTypeLists, newTypes) {
+  const visible = newTypes.filter((t) => !DEFAULT_HIDDEN_TYPES.includes(t));
+  if (!shown) return new Set(visible);
+  const known = new Set(loadedTypeLists.flat());
+  const next = new Set(shown);
+  for (const t of visible) if (!known.has(t)) next.add(t);
+  return next;
+}

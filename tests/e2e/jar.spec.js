@@ -71,4 +71,22 @@ test.describe('JAR Viewer', () => {
     await expect(detail).toContainText('TAFJClient.jar');
     await expect(detail).toContainText('tafj');
   });
+
+  test('a type that only the second release has is shown, with release badges', async ({
+    page,
+  }) => {
+    await page.goto('./?tool=jar');
+    for (const release of ['R23', 'R25']) {
+      await page.getByRole('button', { name: `Load ${release} from this site` }).click();
+      await expect(page.getByText(new RegExp(`${release} · [\\d,]+ classes`))).toBeVisible({
+        timeout: 30_000,
+      });
+    }
+    await expect(page.getByLabel('Show types').getByLabel('tafj')).toBeChecked();
+    await page.getByLabel('Search classes, packages or JARs').fill('T24Context');
+    const hit = page.getByRole('button', { name: /^T24Context com\.temenos\.tafj/ });
+    await expect(hit).toContainText('R25 only');
+    await hit.click();
+    await expect(page.getByRole('region', { name: 'Class detail' })).toContainText('R25 only');
+  });
 });

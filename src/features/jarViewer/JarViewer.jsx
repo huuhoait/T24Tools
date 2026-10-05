@@ -4,19 +4,26 @@ import { SITE_RELEASES } from '../../lib/siteKnowledge';
 import { toast } from '../../lib/toast';
 import { formatBytes } from '../jsonViewer/jsonTree';
 import {
-  DEFAULT_HIDDEN_TYPES,
   classesInJar,
   compareReleases,
   decodeClassIndex,
   isJarQuery,
   searchClasses,
+  visibleTypesAfterLoad,
 } from './classIndex';
 
+// Release comparison wording, [a, b] = the two loaded releases in order (e.g. R23, R25).
 const BADGE = {
   same: () => 'same JAR in both',
   moved: (d) => `moved: ${d.a.join(', ')} → ${d.b.join(', ')}`,
-  onlyA: () => 'only in the first release',
-  onlyB: () => 'only in the second release',
+  onlyA: (d, [a]) => `${a} only`,
+  onlyB: (d, [, b]) => `${b} only`,
+};
+const SHORT_BADGE = {
+  same: () => 'same JAR',
+  moved: () => 'moved',
+  onlyA: ([a]) => `${a} only`,
+  onlyB: ([, b]) => `${b} only`,
 };
 
 function Kind({ c }) {
@@ -74,7 +81,7 @@ function ClassDetail({ entries, index, diff, releases, onOpen }) {
           {d && (
             <tr>
               <th>{releases.join(' → ')}</th>
-              <td>{BADGE[d.status](d)}</td>
+              <td>{BADGE[d.status](d, releases)}</td>
             </tr>
           )}
         </tbody>
@@ -132,9 +139,8 @@ export function JarViewer() {
     const decoded = decodeClassIndex(doc);
     setIndexes((cur) => ({ ...cur, [decoded.release]: decoded }));
     setActive(decoded.release);
-    setShown(
-      (cur) => cur || new Set(decoded.types.filter((t) => !DEFAULT_HIDDEN_TYPES.includes(t))),
-    );
+    const loadedTypes = Object.values(indexes).map((i) => i.types);
+    setShown((cur) => visibleTypesAfterLoad(cur, loadedTypes, decoded.types));
     setError('');
   }
 
@@ -293,7 +299,9 @@ export function JarViewer() {
                 >
                   <b>{c.name}</b> <code>{c.package}</code> <span className="jar-name">{c.jar}</span>
                   {badge(c.qualified) && (
-                    <span className={`jar-badge ${badge(c.qualified)}`}>{badge(c.qualified)}</span>
+                    <span className={`jar-badge ${badge(c.qualified)}`}>
+                      {SHORT_BADGE[badge(c.qualified)](releases)}
+                    </span>
                   )}
                 </button>
               ))}
