@@ -23,6 +23,7 @@ const ArtefactGenerator = named(
   'ArtefactGenerator',
 );
 const JsonViewer = named(() => import('./features/jsonViewer/JsonViewer'), 'JsonViewer');
+const JarViewer = named(() => import('./features/jarViewer/JarViewer'), 'JarViewer');
 const OFSGenerator = named(() => import('./features/tools/EmbeddedTools'), 'OFSGenerator');
 const LogAnalyzer = named(() => import('./features/tools/EmbeddedTools'), 'LogAnalyzer');
 
@@ -105,6 +106,7 @@ function App() {
               {tab === 'ofs' && <OFSGenerator />}
               {tab === 'log' && <LogAnalyzer onOpenTool={setTab} />}
               {tab === 'json' && <JsonViewer />}
+              {tab === 'jar' && <JarViewer />}
             </ErrorBoundary>
           )}
         </Suspense>

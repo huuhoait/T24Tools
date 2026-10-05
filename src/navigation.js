@@ -7,6 +7,7 @@ export const NAV_TABS = [
   ['ofs', 'OFS Message Generator'],
   ['log', 'T24 Log Analyzer'],
   ['json', 'Application Viewer'],
+  ['jar', 'JAR Viewer'],
 ];
 
 const TAB_IDS = NAV_TABS.map(([id]) => id);

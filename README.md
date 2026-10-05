@@ -11,6 +11,7 @@ or generate is uploaded anywhere.
 | **OFS Message Generator** | Builds, parses and inspects OFS messages using the five-part message structure. Configurations are saved in this browser.                                                                                                                                                                                                          |
 | **T24 Log Analyzer**      | Reads up to three T24/TAFJ log files (or pasted content), filters entries, shows OFS and XML details, and sends an entry's OFS message to the OFS Message Generator.                                                                                                                                                               |
 | **Application Viewer**    | Formats pasted or opened JSON as a foldable, searchable tree, fast even for a 20 MB `fields.json`. A knowledge file also gets a T24 applications index: search an application or field and see its fields as a table.                                                                                                              |
+| **JAR Viewer**            | Finds the JAR and package of any T24 Java class (R23/R25): load a published class index or your own classes.json, search a class, package or JAR, follow superclasses, see public methods of hook and API classes, and which classes moved JAR between releases.                                                                   |
 
 The Routine Creator, OFS Message Generator and T24 Log Analyzer moved here from [RepoMind](https://github.com/zainknoman/RepoMind), which now
 focuses on codebase intelligence (including analysis of T24 source code). See
@@ -34,7 +35,7 @@ focuses on codebase intelligence (including analysis of T24 source code). See
   Authentication fields are left blank on purpose.
 - **Knowledge files**: **Load R23 / R25 from this site** (Routine Builder, Artefact Generator,
   Application Viewer, JAR Viewer) loads a published release; you can also open your own file.
-- `?tool=routine`, `?tool=builder`, `?tool=artefact`, `?tool=ofs`, `?tool=log` and `?tool=json` open a tool directly.
+- `?tool=routine`, `?tool=builder`, `?tool=artefact`, `?tool=ofs`, `?tool=log`, `?tool=json` and `?tool=jar` open a tool directly.
 - **Artefact Generator**: load a release's `fields.json` with **Load knowledge file…**, then
   choose the language, the routine type and the inputs. See
   [docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md).

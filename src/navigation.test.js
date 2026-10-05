@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { NAV_TABS, initialTab } from './navigation';
 
 describe('navigation', () => {
-  it('has exactly the six T24 tools, in header order', () => {
+  it('has exactly the seven T24 tools, in header order', () => {
     expect(NAV_TABS).toEqual([
       ['routine', 'Routine Creator'],
       ['builder', 'Routine Builder'],
@@ -10,6 +10,7 @@ describe('navigation', () => {
       ['ofs', 'OFS Message Generator'],
       ['log', 'T24 Log Analyzer'],
       ['json', 'Application Viewer'],
+      ['jar', 'JAR Viewer'],
     ]);
   });
 
@@ -20,6 +21,7 @@ describe('navigation', () => {
     expect(initialTab('?tool=artefact')).toBe('artefact');
     expect(initialTab('?tool=builder')).toBe('builder');
     expect(initialTab('?tool=json')).toBe('json');
+    expect(initialTab('?tool=jar')).toBe('jar');
     expect(initialTab('?tool=codebase')).toBe('routine');
     expect(initialTab('')).toBe('routine');
   });

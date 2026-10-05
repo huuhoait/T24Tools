@@ -1,0 +1,22 @@
+{
+  "kind": "t24-classes",
+  "schemaVersion": 1,
+  "release": "RTEST",
+  "generated": "2026-10-05T00:00:00Z",
+  "jars": ["SAMPLE_Hooks.jar", "SAMPLE_Core.jar"],
+  "packages": ["com.sample.core", "com.sample.hook"],
+  "types": ["hook", "internal"],
+  "classes": [
+    ["BaseContext", 0, 1, 1, 2, "", []],
+    [
+      "SampleLifecycle",
+      1,
+      0,
+      0,
+      0,
+      "com.sample.core.BaseContext",
+      [],
+      [["checkId", "java.lang.String", ["java.lang.String"]]]
+    ]
+  ]
+}

@@ -19,7 +19,7 @@ function collectPageErrors(page) {
 }
 
 test.describe('T24Tools shell', () => {
-  test('header has exactly the six T24 tools and no codebase features', async ({ page }) => {
+  test('header has exactly the seven T24 tools and no codebase features', async ({ page }) => {
     const errors = collectPageErrors(page);
     await page.goto('./');
     await expect(page.locator('header')).toContainText('T24Tools');
@@ -31,6 +31,7 @@ test.describe('T24Tools shell', () => {
       'OFS Message Generator',
       'T24 Log Analyzer',
       'Application Viewer',
+      'JAR Viewer',
     ]);
     await expect(nav.getByRole('button', { name: 'Routine Creator' })).toHaveAttribute(
       'aria-current',
