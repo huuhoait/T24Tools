@@ -11,19 +11,26 @@ describe('published knowledge files', () => {
   it('maps each release fields.json and manifest.json from docs/t24tools to knowledge/', () => {
     const files = knowledgeFiles('/repo');
     expect(files.map((f) => f.target)).toEqual(
-      SITE_RELEASES.flatMap((r) => [siteKnowledgePath(r), siteKnowledgePath(r, 'manifest.json')]),
+      SITE_RELEASES.flatMap((r) => [
+        siteKnowledgePath(r),
+        siteKnowledgePath(r, 'classes.json'),
+        siteKnowledgePath(r, 'manifest.json'),
+      ]),
     );
     expect(files[0].source.split(sep).join('/')).toBe('/repo/docs/t24tools/R23/fields.json');
   });
 
-  it.each(SITE_RELEASES)('%s fields.json matches the SHA-256 in its manifest', (release) => {
+  it.each(
+    SITE_RELEASES.flatMap((r) => [
+      [r, 'fields.json'],
+      [r, 'classes.json'],
+    ]),
+  )('%s %s matches the SHA-256 in its manifest', (release, file) => {
     const dir = new URL(`docs/t24tools/${release}/`, root);
     const manifest = JSON.parse(readFileSync(new URL('manifest.json', dir), 'utf8'));
-    const bytes = readFileSync(new URL('fields.json', dir));
+    const bytes = readFileSync(new URL(file, dir));
     expect(manifest.release).toBe(release);
-    expect(bytes.length).toBe(manifest.files['fields.json'].bytes);
-    expect(createHash('sha256').update(bytes).digest('hex')).toBe(
-      manifest.files['fields.json'].sha256,
-    );
+    expect(bytes.length).toBe(manifest.files[file].bytes);
+    expect(createHash('sha256').update(bytes).digest('hex')).toBe(manifest.files[file].sha256);
   });
 });

@@ -1,7 +1,7 @@
 {
   "release": "R23",
   "schemaVersion": 3,
-  "generated": "2026-10-02T22:25:49Z",
+  "generated": "2026-10-05T10:43:51Z",
   "apps": 4596,
   "fields": 162842,
   "files": {
@@ -12,6 +12,12 @@
     "descriptions.json": {
       "bytes": 10612260,
       "sha256": "7d66a3482a9ac7efe885f1f61a545583892a1c107c054533b5f1427f3dda304a"
+    },
+    "classes.json": {
+      "bytes": 11930688,
+      "sha256": "f6da0ec978189cd9b0db587eebcd3617d35afa05ab13d0017cf7d544da599cd7"
     }
-  }
+  },
+  "classes": 92912,
+  "jars": 2049
 }

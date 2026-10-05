@@ -1,6 +1,5 @@
-// Vite plugin: publish the R23 / R25 knowledge files kept in docs/t24tools/ with the site, at
-// knowledge/<R>/fields.json, so the header can link to them and the tools can load them in one
-// click. docs/ stays the only copy in the repo: a build copies the files into the output folder
+// Vite plugin: publish the R23 / R25 knowledge files (fields.json, classes.json) kept in
+// docs/t24tools/ with the site, at knowledge/<R>/, so the tools can load them in one click. docs/ stays the only copy in the repo: a build copies the files into the output folder
 // (so GitHub Pages and the E2E preview serve them), and the dev server serves them from docs/.
 
 import { copyFileSync, createReadStream, existsSync, mkdirSync } from 'node:fs';
@@ -9,7 +8,7 @@ import { SITE_RELEASES, siteKnowledgePath } from '../lib/siteKnowledge.js';
 
 export function knowledgeFiles(root) {
   return SITE_RELEASES.flatMap((release) =>
-    ['fields.json', 'manifest.json'].map((file) => ({
+    ['fields.json', 'classes.json', 'manifest.json'].map((file) => ({
       source: join(root, 'docs', 't24tools', release, file),
       target: siteKnowledgePath(release, file),
     })),
