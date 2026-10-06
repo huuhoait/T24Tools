@@ -8,8 +8,8 @@ or generate is uploaded anywhere.
 | **Routine Creator**       | Generates legacy T24/Infobasic routines (tables, verified field positions, F.READ/F.WRITE and other snippets, legacy templates, EVAL queries). **Open existing routine** reads a `.b` file back into the creator or copies it under a new name.                                                                                              |
 | **Routine Builder**       | The Routine Creator with the applications and fields of your release: search any application, tick its fields, and their positions come from the knowledge file. Without one it works like the Routine Creator.                                                                                                                              |
 | **Artefact Generator**    | Generates T24 routines and L3 Java hooks in 25 types (Infobasic, jBC, Java). You choose the release, the language and the type, then fill in the inputs. Field names come from a knowledge file you load from your own Temenos-Skills; it stays in this browser. Every template's example compiles against a real T24 R25 install.           |
-| **OFS Message Generator** | Builds, parses and inspects OFS messages using the five-part message structure. Configurations are saved in this browser.                                                                                                                                                                                                                    |
-| **T24 Log Analyzer**      | Reads up to three T24/TAFJ log files (or pasted content), filters entries, shows OFS and XML details, and sends an entry's OFS message to the OFS Message Generator.                                                                                                                                                                         |
+| **OFS Message Generator** | Builds, parses and inspects OFS messages using the five-part message structure; the message updates as you type. Configurations are saved in this browser, without the password.                                                                                                                                                             |
+| **T24 Log Analyzer**      | Reads any number of T24/TAFJ log files (or pasted content) side by side, filters them by text and level, shows OFS and XML details, and sends an entry's OFS message to the OFS Message Generator.                                                                                                                                           |
 | **Application Viewer**    | Formats pasted or opened JSON as a foldable, searchable tree, fast even for a 20 MB `fields.json`. A knowledge file also gets a T24 applications index: search an application or field and see its fields as a table.                                                                                                                        |
 | **JAR Viewer**            | Finds the JAR and package of any T24 Java class (R23/R25): load a published class index or your own classes.json, search a class, package or JAR, follow superclasses (R25 also indexes the TAFJ runtime JARs that hold them, such as T24Context), see public methods of hook and API classes, and which classes moved JAR between releases. |
 | **Markdown Viewer**       | Paste Markdown or open .md files and read them rendered: tables, code, nested lists and Mermaid diagrams. Scripts in the Markdown never run, and files stay in this browser.                                                                                                                                                                 |
@@ -31,9 +31,9 @@ focuses on codebase intelligence (including analysis of T24 source code). See
     SUBROUTINE / PROGRAM / FUNCTION header and its own name in comments, strings and calls to
     itself. `CALL ACCOUNT.EXTRACT.HELPER` is not touched when renaming `ACCOUNT.EXTRACT`. A diff
     lists every changed line before you copy or download the `.b` file.
-- **T24 Log Analyzer → entry → 📨 Open in OFS Generator** switches to the OFS Message Generator
+- **T24 Log Analyzer → entry → Open in OFS Generator** switches to the OFS Message Generator
   with the application, version, function, transaction id, company and fields filled in.
-  Authentication fields are left blank on purpose.
+  Authentication fields are left blank on purpose. See [docs/TOOLS.md](docs/TOOLS.md).
 - **Knowledge files**: **Load R23 / R25 from this site** (Routine Builder, Artefact Generator,
   Application Viewer, JAR Viewer) loads a published release; you can also open your own file.
 - `?tool=routine`, `?tool=builder`, `?tool=artefact`, `?tool=ofs`, `?tool=log`, `?tool=json`, `?tool=jar` and `?tool=md` open a tool directly.
@@ -74,12 +74,9 @@ Enable it once under **Settings → Pages → Source: GitHub Actions**.
 
 ## Security
 
-The OFS Message Generator and the T24 Log Analyzer are self-contained pages in `public/tools/`.
-They run in sandboxed iframes with an opaque origin: they cannot read T24Tools' storage or navigate
-the app. They reach storage through `public/tools/t24tools-bridge.js`, and the app only honours
-two keys (`t24tools.ofs.config`, `t24tools.t24.ofsContext`) and one action (open the OFS
-Generator). The production build carries a Content Security Policy that allows no network
-connections beyond this site.
+Every tool is part of the app bundle; nothing is framed. The production build carries a Content
+Security Policy that allows no network connections beyond this site and refuses frames. The OFS
+Message Generator never saves the password, and log files are read in the browser only.
 
 ## Disclaimer
 

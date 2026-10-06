@@ -41,6 +41,28 @@
   code is repeated for each; one field still renders the compile-verified template unchanged.
   See [docs/ARTEFACT_GENERATOR.md](docs/ARTEFACT_GENERATOR.md#several-fields).
 
+### Changed
+
+- **OFS Message Generator** and **T24 Log Analyzer** are React tools in the T24Tools layout and
+  theme (light and dark) instead of HTML pages in sandboxed iframes. `public/tools/`, the
+  `t24tools-bridge.js` storage bridge and `EmbeddedTools` are removed, and the Content Security
+  Policy now sets `frame-src 'none'`. Saved configurations and the Log Analyzer handoff use the
+  same storage keys as before. See [docs/TOOLS.md](docs/TOOLS.md).
+- OFS Message Generator: the message updates as you type (no **Generate** button), fields are
+  edited as MV / SV / value rows, and a parsed message is summarised in the page instead of a
+  pop-up. **Save** no longer stores the password, and the parse summary masks it. The TEC
+  **Command** drop-down, which never changed the message, is gone.
+- T24 Log Analyzer: open or drop any number of files instead of three fixed slots, one column per
+  source, level and **OFS** filter chips, 200 entries per column with **Show more**, and an entry
+  dialog with **Copy** buttons in place of double-click-to-copy. Timestamps read
+  `2026-09-01 10:15:30.1234`.
+
+### Fixed
+
+- Log Analyzer → OFS Generator handoff: a logged version `FUNDS.TRANSFER,ACTR` became the version
+  `FUNDS.TRANSFER,ACTR`, which added a comma and shifted every later part of the message. It is now
+  the version name `ACTR`, and repeated fields keep their MV / SV positions.
+
 ## 1.1.0 — 2026-10-03
 
 ### Added

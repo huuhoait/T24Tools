@@ -1,5 +1,4 @@
-// Header tabs: [tab id, label]. Ids key App state and ?tool= deep links (the Log Analyzer's
-// standalone bridge opens ../?tool=ofs), so rename labels, never ids.
+// Header tabs: [tab id, label]. Ids key App state and ?tool= deep links, so rename labels, never ids.
 export const NAV_TABS = [
   ['routine', 'Routine Creator'],
   ['builder', 'Routine Builder'],

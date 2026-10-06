@@ -73,11 +73,9 @@ test.describe('T24Tools shell', () => {
 
   test('?tool= deep links open a tool', async ({ page }) => {
     await page.goto('./?tool=log');
-    await expect(page.getByRole('heading', { level: 1, name: /T24 Log Analyzer/ })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /T24 and TAFJ logs/ })).toBeVisible();
     await page.goto('./?tool=ofs');
-    await expect(
-      page.getByRole('heading', { level: 1, name: /OFS Message Generator/ }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /OFS messages/ })).toBeVisible();
   });
 });
 
@@ -178,33 +176,56 @@ test.describe('Routine Creator', () => {
   });
 });
 
-test.describe('Embedded T24 tools', () => {
-  // The embedded tools are at least 760px tall; a desktop-sized window keeps their dialogs in view.
-  test.use({ viewport: { width: 1440, height: 1200 } });
-
-  test('OFS Generator is sandboxed and persists settings through the bridge', async ({ page }) => {
+test.describe('OFS Message Generator', () => {
+  test('builds a message as the form is filled, saves it without the password and loads it', async ({
+    page,
+  }) => {
+    const errors = collectPageErrors(page);
     await page.goto('./?tool=ofs');
-    const iframe = page.locator('iframe[title="OFS Generator"]');
-    await expect(iframe).toHaveAttribute('sandbox', /allow-scripts/);
-    await expect(iframe).not.toHaveAttribute('sandbox', /allow-same-origin/);
-    const tool = page.frameLocator('iframe[title="OFS Generator"]');
-    await tool.locator('#application').fill('FUNDS.TRANSFER');
-    await tool.locator('#saveBtn').click();
-    await expect
-      .poll(() => page.evaluate(() => localStorage.getItem('t24tools.ofs.config') || ''))
-      .toContain('FUNDS.TRANSFER');
-    const frame = page.frames().find((f) => f.url().includes('ofsMessageGenNew.html'));
-    const reachParent = await frame.evaluate(() => {
-      try {
-        return String(window.parent.localStorage.length);
-      } catch {
-        return 'blocked';
-      }
-    });
-    expect(reachParent).toBe('blocked');
+    await expect(page.locator('iframe')).toHaveCount(0);
+    const output = page.getByLabel('Generated OFS message');
+    await expect(output).toContainText('Enter an application');
+
+    await page.getByLabel('Application').fill('FUNDS.TRANSFER');
+    await page.getByLabel('Version').fill('TEST');
+    await page.getByLabel('User', { exact: true }).fill('INPUTT');
+    await page.getByLabel('Password').fill('secret');
+    await page.getByRole('button', { name: '+ Field' }).click();
+    await page.getByLabel('Field name 1').fill('NARRATIVE');
+    await page.getByLabel('Field 1 value 1', { exact: true }).fill('a,b');
+    await page.getByLabel('Field 1 value 1 multi-value').fill('2');
+    await expect(output).toHaveText('FUNDS.TRANSFER,TEST/I/PROCESS,INPUTT/secret,,NARRATIVE:2=a?b');
+
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    const saved = await page.evaluate(() => localStorage.getItem('t24tools.ofs.config'));
+    expect(saved).toContain('FUNDS.TRANSFER');
+    expect(saved).not.toContain('secret');
+
+    await page.getByRole('button', { name: 'Clear' }).click();
+    await expect(page.getByLabel('Application')).toHaveValue('');
+    await page.getByRole('button', { name: 'Load saved' }).click();
+    await expect(page.getByLabel('Field name 1')).toHaveValue('NARRATIVE');
+    await expect(output).toHaveText('FUNDS.TRANSFER,TEST/I/PROCESS,INPUTT/,,NARRATIVE:2=a?b');
+    expect(errors).toEqual([]);
   });
 
-  test('OFS Generator loads a configuration saved by RepoMind', async ({ page }) => {
+  test('parses a pasted message into the form', async ({ page }) => {
+    await page.goto('./?tool=ofs');
+    await page
+      .getByLabel('OFS message to parse')
+      .fill('ENQUIRY.SELECT,,TEST.USER/654321,,ACCOUNT.NUMBER EQ 123');
+    await page.getByRole('button', { name: 'Parse into form' }).click();
+    await expect(page.getByRole('tab', { name: 'Enquiry' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await expect(page.getByLabel('Selection criteria')).toHaveValue('ACCOUNT.NUMBER EQ 123');
+    const summary = page.getByLabel('Parsed message');
+    await expect(summary).toContainText('TEST.USER / ••••');
+    await expect(summary).not.toContainText('654321');
+  });
+
+  test('loads a configuration saved by RepoMind', async ({ page }) => {
     await page.addInitScript(() => {
       if (!sessionStorage.getItem('seeded')) {
         localStorage.setItem(
@@ -215,39 +236,74 @@ test.describe('Embedded T24 tools', () => {
       }
     });
     await page.goto('./?tool=ofs');
-    const tool = page.frameLocator('iframe[title="OFS Generator"]');
-    await tool.locator('#loadBtn').click();
-    await expect(tool.locator('#application')).toHaveValue('CUSTOMER');
+    await page.getByRole('button', { name: 'Load saved' }).click();
+    await expect(page.getByLabel('Application')).toHaveValue('CUSTOMER');
   });
+});
 
-  test('T24 Log Analyzer loads in the sandbox and hands an OFS message to the OFS Generator', async ({
-    page,
-  }) => {
+test.describe('T24 Log Analyzer', () => {
+  test('hands an OFS message from a log entry to the OFS Generator', async ({ page }) => {
     const errors = collectPageErrors(page);
     await page.goto('./');
     await page.getByRole('button', { name: 'T24 Log Analyzer' }).click();
-    const iframe = page.locator('iframe[title="T24 Log Analyzer"]');
-    await expect(iframe).toHaveAttribute('sandbox', /allow-scripts/);
-    await expect(iframe).not.toHaveAttribute('sandbox', /allow-same-origin/);
-    const log = page.frameLocator('iframe[title="T24 Log Analyzer"]');
-    await expect(log.locator('h1')).toContainText('T24 Log Analyzer');
-    await log.locator('#logInput').fill(OFS_LOG_LINE);
-    await log.locator('.log-entry').first().click();
-    await log.getByRole('button', { name: /Open in OFS Generator/ }).click();
+    await expect(page.locator('iframe')).toHaveCount(0);
+    await page.getByLabel('Paste log content').fill(OFS_LOG_LINE);
+    const column = page.getByRole('region', { name: 'Pasted content' });
+    await expect(column).toContainText('1 entry');
+    await column.getByRole('button', { name: /OFS request/ }).click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('FT26244ABCDE');
+    await expect(dialog.getByRole('cell', { name: 'DEBIT.ACCOUNT' })).toBeVisible();
+    await dialog.getByRole('button', { name: 'Open in OFS Generator' }).click();
 
     await expect(
       page.getByRole('navigation', { name: 'Tools' }).getByRole('button', {
         name: 'OFS Message Generator',
       }),
     ).toHaveAttribute('aria-current', 'page');
-    const ofs = page.frameLocator('iframe[title="OFS Generator"]');
-    await expect(ofs.locator('#application')).toHaveValue('FUNDS.TRANSFER');
-    await expect(ofs.locator('#transactionId')).toHaveValue('FT26244ABCDE');
-    await expect(ofs.locator('#rawData')).toHaveValue(/DEBIT\.ACCOUNT.*12345/);
+    // The Routine Creator stays mounted (hidden), so labels are matched exactly.
+    await expect(page.getByRole('heading', { level: 1, name: /OFS messages/ })).toBeVisible();
+    const label = (name) => page.getByLabel(name, { exact: true });
+    await expect(label('Application')).toHaveValue('FUNDS.TRANSFER');
+    await expect(label('Version')).toHaveValue('');
+    await expect(label('Transaction / record ID')).toHaveValue('FT26244ABCDE');
+    await expect(label('Company')).toHaveValue('GB0010001');
+    await expect(page.getByLabel('Generated OFS message')).toHaveText(
+      'FUNDS.TRANSFER,/I/PROCESS,//GB0010001,FT26244ABCDE,DEBIT.ACCOUNT=12345',
+    );
     // The handoff is consumed once.
     await expect
       .poll(() => page.evaluate(() => localStorage.getItem('t24tools.t24.ofsContext')))
       .toBeNull();
     expect(errors).toEqual([]);
+  });
+
+  test('reads several files side by side and filters them together', async ({ page }) => {
+    await page.goto('./?tool=log');
+    const line = (level, text) =>
+      `[${level}]20260901 10:15:30.1234 1 [S1] [INPUTTER] [MOD] ${text}`;
+    await page.getByLabel('Log files').setInputFiles([
+      {
+        name: 'one.log',
+        mimeType: 'text/plain',
+        buffer: Buffer.from([line('INFO ', 'started'), line('ERROR', 'broke')].join('\n')),
+      },
+      { name: 'two.log', mimeType: 'text/plain', buffer: Buffer.from(line('INFO ', 'other')) },
+    ]);
+    await expect(page.getByRole('region', { name: 'one.log' })).toContainText('2 entries');
+    await expect(page.getByRole('region', { name: 'two.log' })).toContainText('1 entry');
+
+    await page.getByRole('group', { name: 'Level' }).getByRole('button', { name: 'ERROR' }).click();
+    await expect(page.getByRole('region', { name: 'one.log' })).toContainText('1 of 2');
+    await expect(page.getByRole('region', { name: 'two.log' })).toContainText('No entries match');
+
+    await page.getByRole('group', { name: 'Level' }).getByRole('button', { name: 'All' }).click();
+    await page.getByLabel('Filter entries').fill('other');
+    await expect(page.getByRole('region', { name: 'two.log' })).toContainText('1 entry');
+    await expect(page.getByRole('region', { name: 'one.log' })).toContainText('0 of 2');
+
+    await page.getByRole('button', { name: 'Remove two.log' }).click();
+    await expect(page.getByRole('region', { name: 'two.log' })).toHaveCount(0);
   });
 });

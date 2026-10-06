@@ -4,7 +4,7 @@ import { knowledgeFilesPlugin } from './src/build/knowledgeFiles.js';
 
 // GitHub Pages cannot send response headers, so production builds carry the Content Security Policy
 // as a <meta> tag. T24Tools makes no network calls: everything, including uploaded routines and
-// logs, stays in the browser. The embedded tools are same-site pages loaded into sandboxed frames.
+// logs, stays in the browser. No page is framed, so frames are refused.
 // The dev server is excluded because React Refresh relies on an inline script.
 export const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
@@ -13,7 +13,7 @@ export const CONTENT_SECURITY_POLICY = [
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
   "connect-src 'self'",
-  "frame-src 'self'",
+  "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'none'",

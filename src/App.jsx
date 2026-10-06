@@ -28,15 +28,15 @@ const MarkdownViewer = named(
   () => import('./features/markdownViewer/MarkdownViewer'),
   'MarkdownViewer',
 );
-const OFSGenerator = named(() => import('./features/tools/EmbeddedTools'), 'OFSGenerator');
-const LogAnalyzer = named(() => import('./features/tools/EmbeddedTools'), 'LogAnalyzer');
+const OfsGenerator = named(() => import('./features/ofsGenerator/OfsGenerator'), 'OfsGenerator');
+const LogAnalyzer = named(() => import('./features/logAnalyzer/LogAnalyzer'), 'LogAnalyzer');
 
 function App() {
   const [theme, setTheme] = useState(loadTheme);
   const [tab, setTab] = useState(initialTab);
   // The Routine Creator and Routine Builder stay mounted once opened, so an imported routine
-  // survives a tab switch. The embedded tools are remounted on every visit: the OFS Generator
-  // reads a Log Analyzer handoff when its frame starts, exactly as it did in RepoMind.
+  // survives a tab switch. The other tools are remounted on every visit: the OFS Generator reads a
+  // Log Analyzer handoff when it mounts.
   const [routineMounted, setRoutineMounted] = useState(tab === 'routine');
   if (tab === 'routine' && !routineMounted) setRoutineMounted(true);
   const [builderMounted, setBuilderMounted] = useState(tab === 'builder');
@@ -107,7 +107,7 @@ function App() {
           {tab !== 'routine' && tab !== 'builder' && (
             <ErrorBoundary key={tab}>
               {tab === 'artefact' && <ArtefactGenerator />}
-              {tab === 'ofs' && <OFSGenerator />}
+              {tab === 'ofs' && <OfsGenerator />}
               {tab === 'log' && <LogAnalyzer onOpenTool={setTab} />}
               {tab === 'json' && <JsonViewer />}
               {tab === 'jar' && <JarViewer />}
