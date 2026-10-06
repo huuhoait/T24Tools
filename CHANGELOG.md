@@ -24,8 +24,10 @@
 - Application Viewer **Load R23 / R25 from this site**: opens a published `fields.json`, with its
   T24 applications index, without downloading it first.
 - **JAR Viewer** (`?tool=jar`): which JAR and package holds a T24 Java class, for R23 and R25.
-  Load a published `classes.json` (or your own), search a class, qualified name, package or JAR
-  (ranked, case-insensitive, type filter), list a JAR's classes by package, see a class's flags,
+  Load a published `classes.json` (or drop your own) and read it like the Application Viewer: a
+  **JSON tree** tab, and a **JARs** tab with every JAR listed on the left, the chosen JAR's classes
+  by package on the right and the chosen class's detail below them. Search filters the JARs and
+  finds classes, qualified names and packages (ranked, case-insensitive, type filter); see a class's flags,
   superclass and interfaces (linked when indexed), public methods of hook, API, batch, service,
   integration and TAFJ classes, and copy its `import`. With both releases loaded, each class shows
   whether it kept its JAR, moved, or exists in one release only. R25 also indexes the TAFJ runtime

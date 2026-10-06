@@ -5,6 +5,7 @@ import {
   compareReleases,
   decodeClassIndex,
   isJarQuery,
+  listJars,
   searchClasses,
   visibleTypesAfterLoad,
 } from './classIndex';
@@ -108,6 +109,34 @@ describe('JAR mode', () => {
     const groups = classesInJar(index, 'A_Hook.jar');
     expect([...groups.keys()]).toEqual(['com.x.hook']);
     expect(groups.get('com.x.hook').map((c) => c.name)).toEqual(['Lifecycle']);
+  });
+  it('lists only the shown types of a JAR when types are given', () => {
+    const all = classesInJar(index, 'B_Core.jar');
+    expect(all.get('com.x.core').map((c) => c.name)).toEqual([
+      'LifecycleHelper',
+      'Context',
+      'Shared',
+      'MyLifecycleUtil',
+    ]);
+    const api = classesInJar(index, 'B_Core.jar', new Set(['public-api']));
+    expect(api.get('com.x.core').map((c) => c.name)).toEqual(['Context', 'MyLifecycleUtil']);
+  });
+});
+
+describe('listJars', () => {
+  const index = decodeClassIndex(R23);
+  it('lists every JAR by name with its class count', () => {
+    expect(listJars(index)).toEqual([
+      { jar: 'A_Hook.jar', count: 1 },
+      { jar: 'B_Core.jar', count: 4 },
+      { jar: 'C_Dup.jar', count: 1 },
+    ]);
+  });
+  it('filters by part of the name, any case, and counts only the shown types', () => {
+    expect(listJars(index, 'core')).toEqual([{ jar: 'B_Core.jar', count: 4 }]);
+    expect(listJars(index, 'B_CORE.JAR', { types: new Set(['public-api']) })).toEqual([
+      { jar: 'B_Core.jar', count: 2 },
+    ]);
   });
 });
 

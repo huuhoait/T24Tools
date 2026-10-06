@@ -169,7 +169,7 @@ function VirtualTree({ rows, selectedId, scrollTo, onToggle, onSelect }) {
   );
 }
 
-function TreeView({ root, expanded, setExpanded, reveal, onReveal }) {
+export function TreeView({ root, expanded, setExpanded, reveal, onReveal }) {
   const [query, setQuery] = useState('');
   const [found, setFound] = useState(null);
   const [selectedId, setSelectedId] = useState('');

@@ -1418,11 +1418,6 @@ textarea {
   padding: 8px;
 }
 /* JAR Viewer */
-.jar-search {
-  width: 100%;
-  padding: 9px 12px;
-  font: inherit;
-}
 .jar-types {
   display: flex;
   flex-wrap: wrap;
@@ -1440,8 +1435,44 @@ textarea {
 .jar-releases button.active {
   font-weight: 600;
 }
-.jar-list {
-  margin-top: 10px;
+.json-meta .jar-releases {
+  margin-top: 0;
+}
+.jar-classes {
+  max-height: 46vh;
+  overflow: auto;
+  padding: 0 10px 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+.jar-classes h3 {
+  position: sticky;
+  top: 0;
+  margin: 0;
+  padding: 8px 0 4px;
+  background: var(--bg);
+  font-size: 13px;
+}
+.jar-classes .jar-hit:last-child {
+  border-bottom: 0;
+}
+.jar-browser .jar-detail {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.jar-browser .jar-detail h2 {
+  margin: 0 0 4px;
+  font:
+    700 17px ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.jar-browser .jar-types {
+  padding: 0;
+  font-size: 13px;
 }
 .jar-hit {
   display: flex;

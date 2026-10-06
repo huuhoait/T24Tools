@@ -1,13 +1,14 @@
-import { useMemo, useRef, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { siteKnowledgeUrl } from '../../lib/knowledge';
 import { SITE_RELEASES } from '../../lib/siteKnowledge';
 import { toast } from '../../lib/toast';
-import { formatBytes } from '../jsonViewer/jsonTree';
+import { TreeView } from '../jsonViewer/JsonViewer';
+import { ROOT_ID, ancestorIds, defaultExpanded, formatBytes } from '../jsonViewer/jsonTree';
 import {
   classesInJar,
   compareReleases,
   decodeClassIndex,
-  isJarQuery,
+  listJars,
   searchClasses,
   visibleTypesAfterLoad,
 } from './classIndex';
@@ -31,6 +32,12 @@ function Kind({ c }) {
   return <small className="muted">{bits.filter(Boolean).join(' · ')}</small>;
 }
 
+function Badge({ status, releases }) {
+  return status ? (
+    <span className={`jar-badge ${status}`}>{SHORT_BADGE[status](releases)}</span>
+  ) : null;
+}
+
 function ClassDetail({ entries, index, diff, releases, onOpen }) {
   const c = entries[0];
   const known = (q) => index.byQualified.has(q);
@@ -44,7 +51,7 @@ function ClassDetail({ entries, index, diff, releases, onOpen }) {
     );
   const d = diff?.get(c.qualified);
   return (
-    <section className="routine-card jar-detail" aria-label="Class detail">
+    <section className="jar-detail" aria-label="Class detail">
       <h2>{c.name}</h2>
       <p className="muted">
         <code>{c.package}</code> <Kind c={c} />
@@ -117,15 +124,191 @@ function ClassDetail({ entries, index, diff, releases, onOpen }) {
   );
 }
 
+/** JAR list on the left, the chosen JAR's classes on the right and the chosen class below them. */
+function JarsView({ index, diff, releases, shown, setShown }) {
+  const [query, setQuery] = useState('');
+  const deferred = useDeferredValue(query);
+  const [jar, setJar] = useState('');
+  const [selected, setSelected] = useState('');
+  const classRow = useRef(null);
+  const detailBox = useRef(null);
+
+  const jars = useMemo(() => listJars(index, deferred, { types: shown }), [index, deferred, shown]);
+  const classHits = useMemo(
+    () => searchClasses(index, deferred, { types: shown }),
+    [index, deferred, shown],
+  );
+  const current = index.jars.includes(jar) ? jar : '';
+  const groups = useMemo(
+    () => (current ? classesInJar(index, current, shown) : null),
+    [index, current, shown],
+  );
+  const classCount = groups ? [...groups.values()].reduce((n, list) => n + list.length, 0) : 0;
+  const detail = selected ? index.byQualified.get(selected) : null;
+  const status = (q) => diff?.get(q)?.status;
+
+  useEffect(() => {
+    classRow.current?.scrollIntoView?.({ block: 'nearest' });
+    detailBox.current?.scrollIntoView?.({ block: 'nearest' });
+  }, [current, selected]);
+
+  /** Opens a class: its JAR on the right (the first, if it is in several) and its detail below. */
+  function open(qualified, inJar) {
+    const entries = index.byQualified.get(qualified);
+    if (!entries) return;
+    setJar(inJar && entries.some((e) => e.jar === inJar) ? inJar : entries[0].jar);
+    setSelected(qualified);
+  }
+
+  return (
+    <div className="json-apps jar-browser">
+      <aside className="json-apps-list">
+        <input
+          aria-label="Search JARs and classes"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="JAR, class or package name"
+        />
+        <fieldset className="jar-types" aria-label="Show types">
+          {index.types.map((t) => (
+            <label key={t}>
+              <input
+                type="checkbox"
+                aria-label={t}
+                checked={shown.has(t)}
+                onChange={() =>
+                  setShown((cur) => {
+                    const next = new Set(cur);
+                    next.has(t) ? next.delete(t) : next.add(t);
+                    return next;
+                  })
+                }
+              />{' '}
+              {t}
+            </label>
+          ))}
+        </fieldset>
+        <small className="muted">
+          {deferred.trim()
+            ? `${jars.length.toLocaleString()} of ${index.jars.length.toLocaleString()} JARs`
+            : `${index.jars.length.toLocaleString()} JARs`}
+        </small>
+        <ul aria-label="JARs">
+          {jars.map((j) => (
+            <li key={j.jar}>
+              <button
+                type="button"
+                className={j.jar === current ? 'on' : undefined}
+                aria-current={j.jar === current ? 'true' : undefined}
+                onClick={() => {
+                  setJar(j.jar);
+                  setSelected('');
+                }}
+              >
+                {j.jar}
+                <small className="muted"> · {j.count.toLocaleString()}</small>
+              </button>
+            </li>
+          ))}
+        </ul>
+        {classHits.total > 0 && (
+          <>
+            <small className="muted">
+              {classHits.total.toLocaleString()} class(es)
+              {classHits.total > classHits.results.length
+                ? ` · showing the best ${classHits.results.length}`
+                : ''}
+            </small>
+            <ul aria-label="Classes found">
+              {classHits.results.map((c) => (
+                <li key={c.qualified + c.jar}>
+                  <button
+                    type="button"
+                    className={c.qualified === selected && c.jar === current ? 'on' : undefined}
+                    title={`${c.qualified} · ${c.jar}`}
+                    onClick={() => open(c.qualified, c.jar)}
+                  >
+                    {c.name}
+                    <small className="muted"> · {c.jar}</small>{' '}
+                    <Badge status={status(c.qualified)} releases={releases} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </aside>
+
+      <section className="json-app-detail" aria-label="JAR">
+        {!current ? (
+          <p className="muted">Choose a JAR to see its classes, or search for a class.</p>
+        ) : (
+          <>
+            <div className="json-app-head">
+              <div>
+                <h2>{current}</h2>
+                <p className="muted">
+                  {classCount.toLocaleString()} classes · {groups.size.toLocaleString()} packages
+                  {shown.size < index.types.length && ' · shown types only'}
+                </p>
+              </div>
+            </div>
+            <div className="jar-classes" aria-label="Classes in JAR">
+              {groups.size === 0 && (
+                <p className="muted">No classes of the shown types: tick more types.</p>
+              )}
+              {[...groups].map(([pkg, list]) => (
+                <div key={pkg}>
+                  <h3>
+                    <code>{pkg || '(default package)'}</code>{' '}
+                    <small className="muted">{list.length}</small>
+                  </h3>
+                  {list.map((c) => (
+                    <button
+                      key={c.qualified}
+                      ref={c.qualified === selected ? classRow : undefined}
+                      type="button"
+                      className="jar-hit"
+                      aria-current={c.qualified === selected ? 'true' : undefined}
+                      onClick={() => open(c.qualified, current)}
+                    >
+                      <b>{c.name}</b> <Kind c={c} />
+                      <Badge status={status(c.qualified)} releases={releases} />
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        {detail && (
+          <div ref={detailBox}>
+            <ClassDetail
+              entries={detail}
+              index={index}
+              diff={diff}
+              releases={releases}
+              onOpen={(q) => open(q)}
+            />
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
 export function JarViewer() {
   const fileInput = useRef(null);
   const [indexes, setIndexes] = useState({}); // release -> decoded index (session only)
+  const [docs, setDocs] = useState({}); // release -> classes.json as read, for the JSON tree
   const [active, setActive] = useState('');
-  const [query, setQuery] = useState('');
   const [shown, setShown] = useState(null); // Set of visible types; null until an index loads
-  const [selected, setSelected] = useState('');
+  const [view, setView] = useState('tree');
+  const [expanded, setExpanded] = useState(() => new Set([ROOT_ID]));
+  const [reveal, setReveal] = useState(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState('');
+  const [dragging, setDragging] = useState(false);
 
   const index = indexes[active];
   const releases = Object.keys(indexes).sort();
@@ -135,10 +318,17 @@ export function JarViewer() {
     [indexes], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
+  function show(release, doc) {
+    setActive(release);
+    setExpanded(defaultExpanded(doc));
+    setReveal(null);
+  }
+
   function add(doc) {
     const decoded = decodeClassIndex(doc);
     setIndexes((cur) => ({ ...cur, [decoded.release]: decoded }));
-    setActive(decoded.release);
+    setDocs((cur) => ({ ...cur, [decoded.release]: doc }));
+    show(decoded.release, doc);
     const loadedTypes = Object.values(indexes).map((i) => i.types);
     setShown((cur) => visibleTypesAfterLoad(cur, loadedTypes, decoded.types));
     setError('');
@@ -163,161 +353,162 @@ export function JarViewer() {
       return res.json();
     });
 
-  const loadFile = (file) =>
-    file &&
-    run(`${file.name} (${formatBytes(file.size)})`, async () => JSON.parse(await file.text()));
+  async function loadFiles(files) {
+    for (const file of [...(files || [])])
+      await run(`${file.name} (${formatBytes(file.size)})`, async () =>
+        JSON.parse(await file.text()),
+      );
+  }
 
-  const jar = index ? isJarQuery(index, query) : null;
-  const found = index && !jar ? searchClasses(index, query, { types: shown }) : null;
-  const detail = index && selected ? index.byQualified.get(selected) : null;
-  const badge = (q) => diff?.get(q)?.status;
+  function showInTree(path) {
+    setExpanded((current) => {
+      const next = new Set(current);
+      for (const id of ancestorIds(path)) next.add(id);
+      return next;
+    });
+    setReveal({ path });
+    setView('tree');
+  }
+
+  const dropProps = {
+    onDragOver: (e) => {
+      e.preventDefault();
+      setDragging(true);
+    },
+    onDragLeave: () => setDragging(false),
+    onDrop: (e) => {
+      e.preventDefault();
+      setDragging(false);
+      loadFiles(e.dataTransfer.files);
+    },
+  };
 
   return (
-    <div className="routine-creator jar-viewer">
+    <div className="routine-creator json-viewer jar-viewer">
       <div className="routine-creator-hero">
         <div>
           <span className="eyebrow">JAR Viewer</span>
           <h1>Which JAR holds a T24 class?</h1>
           <p className="muted">
-            Load a release&apos;s <code>classes.json</code> and search a class, package or JAR name.
-            Load R23 and R25 to see which classes moved between JARs.
+            Load a release&apos;s <code>classes.json</code> to browse its JARs and the classes in
+            each, or read the file as a JSON tree. Load R23 and R25 to see which classes moved
+            between JARs. Everything stays in this browser.
           </p>
         </div>
       </div>
 
-      <section className="routine-card" aria-label="Class index">
-        <div className="routine-creator-actions">
-          {SITE_RELEASES.map((r) => (
-            <button key={r} type="button" disabled={!!busy} onClick={() => loadSite(r)}>
-              {busy === `Load ${r}` ? `Loading ${r}…` : `Load ${r} from this site`}
-            </button>
-          ))}
-          <button type="button" className="primary" onClick={() => fileInput.current?.click()}>
-            Open classes.json…
-          </button>
-          <input
-            ref={fileInput}
-            type="file"
-            accept=".json,application/json"
-            hidden
-            aria-label="classes.json file"
-            onChange={(e) => {
-              loadFile(e.target.files?.[0]);
-              e.target.value = '';
-            }}
-          />
-        </div>
-        {error && (
-          <p className="routine-validation" role="alert">
-            {error}
-          </p>
-        )}
-        {releases.length > 0 && (
-          <div className="jar-releases" role="status">
-            {releases.map((r) => (
-              <button
-                key={r}
-                type="button"
-                className={r === active ? 'active' : undefined}
-                aria-pressed={r === active}
-                onClick={() => setActive(r)}
-              >
-                {r} · {indexes[r].classes.length.toLocaleString()} classes ·{' '}
-                {indexes[r].jars.length.toLocaleString()} JARs
+      <section className="routine-card json-source" aria-label="Class index">
+        <div className="json-source-bar">
+          <div className="json-site-load">
+            {SITE_RELEASES.map((r) => (
+              <button key={r} type="button" disabled={!!busy} onClick={() => loadSite(r)}>
+                {busy === `Load ${r}` ? `Loading ${r}…` : `Load ${r} from this site`}
               </button>
             ))}
           </div>
+        </div>
+        <input
+          ref={fileInput}
+          type="file"
+          accept=".json,application/json"
+          multiple
+          hidden
+          aria-label="classes.json file"
+          onChange={(e) => {
+            loadFiles(e.target.files);
+            e.target.value = '';
+          }}
+        />
+        <div className={`json-dropzone${dragging ? ' dragging' : ''}`} {...dropProps}>
+          <span className="json-dropzone-icon" aria-hidden="true">
+            ⇪
+          </span>
+          <b>Drop classes.json files here</b>
+          <span className="muted">or</span>
+          <button
+            type="button"
+            className="primary"
+            disabled={!!busy}
+            onClick={() => fileInput.current?.click()}
+          >
+            Open classes.json…
+          </button>
+          <small className="muted">
+            One file per release; R23 and R25 together show which classes moved. Files are read in
+            this browser only and never sent to a server.
+          </small>
+        </div>
+        <div className="json-source-actions">
+          <div className="json-meta" role="status">
+            {busy ? (
+              <span className="json-busy">{busy}…</span>
+            ) : releases.length ? (
+              <div className="jar-releases">
+                {releases.map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    className={r === active ? 'active' : undefined}
+                    aria-pressed={r === active}
+                    onClick={() => show(r, docs[r])}
+                  >
+                    {r} · {indexes[r].classes.length.toLocaleString()} classes ·{' '}
+                    {indexes[r].jars.length.toLocaleString()} JARs
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <span className="muted">Nothing loaded yet.</span>
+            )}
+          </div>
+        </div>
+        {error && (
+          <p className="routine-validation invalid" role="alert">
+            {error}
+          </p>
         )}
       </section>
 
       {index && (
-        <section className="routine-card" aria-label="Search">
-          <input
-            className="jar-search"
-            aria-label="Search classes, packages or JARs"
-            placeholder="Class, package or JAR name — e.g. RecordLifecycle or EB_TemplateHook.jar"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <fieldset className="jar-types" aria-label="Show types">
-            {index.types.map((t) => (
-              <label key={t}>
-                <input
-                  type="checkbox"
-                  aria-label={t}
-                  checked={shown.has(t)}
-                  onChange={() =>
-                    setShown((cur) => {
-                      const next = new Set(cur);
-                      next.has(t) ? next.delete(t) : next.add(t);
-                      return next;
-                    })
-                  }
-                />{' '}
-                {t}
-              </label>
-            ))}
-          </fieldset>
-
-          {jar && (
-            <div className="jar-list">
-              <h2>{jar}</h2>
-              {[...classesInJar(index, jar)].map(([pkg, list]) => (
-                <div key={pkg}>
-                  <h3>
-                    <code>{pkg}</code> <small className="muted">{list.length}</small>
-                  </h3>
-                  {list.map((c) => (
-                    <button
-                      key={c.qualified}
-                      type="button"
-                      className="jar-hit"
-                      onClick={() => setSelected(c.qualified)}
-                    >
-                      {c.name}
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {found && query.trim().length >= 2 && (
-            <div className="jar-list">
-              <p className="muted">
-                {found.total.toLocaleString()} match{found.total === 1 ? '' : 'es'}
-                {found.total > found.results.length &&
-                  ` — showing the best ${found.results.length}, refine to narrow`}
-              </p>
-              {found.results.map((c) => (
-                <button
-                  key={c.qualified + c.jar}
-                  type="button"
-                  className="jar-hit"
-                  aria-current={c.qualified === selected ? 'true' : undefined}
-                  onClick={() => setSelected(c.qualified)}
-                >
-                  <b>{c.name}</b> <code>{c.package}</code> <span className="jar-name">{c.jar}</span>
-                  {badge(c.qualified) && (
-                    <span className={`jar-badge ${badge(c.qualified)}`}>
-                      {SHORT_BADGE[badge(c.qualified)](releases)}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
+        <section className="routine-card json-output" aria-label={`${active} classes.json`}>
+          <div className="tabs" role="tablist">
+            <button
+              role="tab"
+              aria-selected={view === 'tree'}
+              className={view === 'tree' ? 'active' : undefined}
+              onClick={() => setView('tree')}
+            >
+              JSON tree
+            </button>
+            <button
+              role="tab"
+              aria-selected={view === 'jars'}
+              className={view === 'jars' ? 'active' : undefined}
+              onClick={() => setView('jars')}
+            >
+              JARs
+            </button>
+          </div>
+          {view === 'jars' ? (
+            <JarsView
+              key={active}
+              index={index}
+              diff={diff}
+              releases={releases}
+              shown={shown}
+              setShown={setShown}
+            />
+          ) : (
+            <TreeView
+              key={active}
+              root={docs[active]}
+              expanded={expanded}
+              setExpanded={setExpanded}
+              reveal={reveal}
+              onReveal={showInTree}
+            />
           )}
         </section>
-      )}
-
-      {detail && (
-        <ClassDetail
-          entries={detail}
-          index={index}
-          diff={diff}
-          releases={releases}
-          onOpen={setSelected}
-        />
       )}
     </div>
   );

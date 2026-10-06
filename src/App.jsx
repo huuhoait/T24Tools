@@ -116,10 +116,7 @@ function App() {
           )}
         </Suspense>
       </main>
-      <footer>
-        © {new Date().getFullYear()} T24Tools · Zain Kamali · Independent project, not affiliated
-        with or endorsed by Temenos. Temenos, T24 and Transact are trademarks of Temenos AG.
-      </footer>
+      <footer>© {new Date().getFullYear()} T24Tools</footer>
       <Toaster />
     </>
   );

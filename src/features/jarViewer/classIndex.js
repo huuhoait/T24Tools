@@ -79,14 +79,32 @@ export function isJarQuery(index, query) {
   return index.jars.find((jar) => jar.toLowerCase().replace(/\.jar$/, '') === q) || null;
 }
 
-export function classesInJar(index, jar) {
+/** The classes of `jar` grouped by package, packages sorted; only `types` when given. */
+export function classesInJar(index, jar, types = null) {
   const groups = new Map();
   for (const entry of index.classes) {
     if (entry.jar.toLowerCase() !== jar.toLowerCase()) continue;
+    if (types && !types.has(entry.type)) continue;
     if (!groups.has(entry.package)) groups.set(entry.package, []);
     groups.get(entry.package).push(entry);
   }
   return new Map([...groups.entries()].sort(([a], [b]) => a.localeCompare(b)));
+}
+
+/** JARs whose name contains `query` (case and .jar ignored), sorted, each with its count of
+ * classes of the shown `types`: [{ jar, count }]. */
+export function listJars(index, query = '', { types = null } = {}) {
+  const q = query
+    .trim()
+    .toLowerCase()
+    .replace(/\.jar$/, '');
+  const counts = new Map(index.jars.map((jar) => [jar, 0]));
+  for (const entry of index.classes)
+    if (!types || types.has(entry.type)) counts.set(entry.jar, counts.get(entry.jar) + 1);
+  return [...counts]
+    .filter(([jar]) => jar.toLowerCase().includes(q))
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([jar, count]) => ({ jar, count }));
 }
 
 export function compareReleases(a, b) {
